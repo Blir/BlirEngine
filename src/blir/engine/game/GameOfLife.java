@@ -1,5 +1,7 @@
 package blir.engine.game;
 
+import blir.engine.slot.Entity;
+import blir.engine.slot.EntityType;
 import java.util.logging.Level;
 
 /**
@@ -10,22 +12,35 @@ public class GameOfLife extends Game {
 
     public GameOfLife() {
         super("Game Of Life");
+        thisTick = new Entity[50][50];
     }
 
     @Override
     public void init() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        gui.setVisible(true);
+        registerEntityType(EntityType.original);
     }
 
     @Override
     public void run() {
         try {
             while (gui.isRunning()) {
-                for (int row = 0; row < slots.length; row++) {
-                    for (int col = 0; col < slots[row].length; col++) {
-                        slotTypes.get(slots[row][col].id).onUpdate(row, col);
+                nextTick = new Entity[50][50];
+                // MOVE TICK
+                for (int row = 0; row < thisTick.length; row++) {
+                    for (int col = 0; col < thisTick[row].length; col++) {
+                        if (thisTick[row][col] != null) {
+                            entityTypes.get(thisTick[row][col].id)
+                                    .onMoveTick(row, col, this);
+                        } else {
+                            
+                        }
                     }
                 }
+                // SPAWN TICK
+                // COMBAT TICK
+                thisTick = nextTick;
+                gui.repaint();
                 Thread.sleep(50);
             }
         } catch (InterruptedException ex) {
