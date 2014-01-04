@@ -1,11 +1,12 @@
 package blir.engine.game;
 
 import blir.engine.BlirEngine;
-import blir.engine.gui.GameGUI;
+import blir.engine.swing.GameGUI;
 import blir.engine.item.Item;
 import blir.engine.slot.Entity;
 import blir.engine.slot.EntityType;
 import blir.engine.util.Location;
+
 import java.util.*;
 import java.util.logging.Level;
 
@@ -30,6 +31,7 @@ public abstract class Game implements Runnable {
     final GameGUI gui = new GameGUI(this);
     final Map<Integer, EntityType> entityTypes = new HashMap<>();
     final Map<Integer, Item> itemTypes = new HashMap<>();
+    GameState state;
     Entity[][] thisTick;
     Entity[][] nextTick;
     int tick;
@@ -89,15 +91,36 @@ public abstract class Game implements Runnable {
         return thisTick[x][y];
     }
 
-    public boolean spawnEntityAt(int x, int y, Entity entity) {
+    public void placeEntityAt(int x, int y, Entity entity) {
+        if (state != null) {
+            throw new IllegalStateException("game currently ticking");
+        }
+        thisTick[x][y] = entity;
+    }
+    
+    public boolean spawnEntityAt(int x, int y, int id) {
+        if (state != GameState.SPAWN_TICK) {
+            throw new IllegalStateException("not in spawn tick");
+        }
         if (nextTick[x][y] == null) {
-            nextTick[x][y] = entity;
+            nextTick[x][y] = new Entity(id);
             return true;
         }
         return false;
     }
 
-    public EntityType getSlotTypeForID(int id) {
+    public boolean moveEntity(int fromX, int fromY, int toX, int toY) {
+        if (state != GameState.MOVE_TICK) {
+            throw new IllegalStateException("not in move tick");
+        }
+        if (nextTick[toX][toY] == null) {
+            nextTick[toX][toY] = thisTick[fromX][fromY];
+            return true;
+        }
+        return false;
+    }
+
+    public EntityType getEntityTypeByID(int id) {
         return entityTypes.get(id);
     }
 
@@ -105,12 +128,21 @@ public abstract class Game implements Runnable {
         return itemTypes.get(id);
     }
 
-    public Collection<EntityType> getSlotTypes() {
+    public Collection<EntityType> getEntityTypes() {
         return entityTypes.values();
     }
 
     public Collection<Item> getItemTypes() {
         return itemTypes.values();
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
     @Override
@@ -121,5 +153,9 @@ public abstract class Game implements Runnable {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    public int pixels() {
+        return thisTick == null ? 0 : thisTick.length;
     }
 }

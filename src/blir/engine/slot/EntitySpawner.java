@@ -1,9 +1,11 @@
 package blir.engine.slot;
 
 import blir.engine.game.Game;
+import blir.engine.util.Location;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 /**
  *
@@ -12,19 +14,22 @@ import java.awt.image.BufferedImage;
 public class EntitySpawner extends EntityType {
 
     public final int rate, spawnID, cap;
-    
-    private EntitySpawner(int id, String name, Color color, BufferedImage img, int rate, int cap, int spawnID) {
+
+    private EntitySpawner(int id, String name, Color color, BufferedImage img,
+                          int rate, int cap, int spawnID) {
         super(id, name, color, img, null);
         this.rate = rate;
         this.cap = cap;
         this.spawnID = spawnID;
     }
-    
-    public EntitySpawner(int id, String name, Color color, int rate, int cap, int spawnID) {
+
+    public EntitySpawner(int id, String name, Color color, int rate, int cap,
+                         int spawnID) {
         this(id, name, color, null, rate, cap, spawnID);
     }
-    
-    public EntitySpawner(int id, String name, BufferedImage img, int rate, int cap, int spawnID) {
+
+    public EntitySpawner(int id, String name, BufferedImage img, int rate,
+                         int cap, int spawnID) {
         this(id, name, null, img, rate, cap, spawnID);
     }
 
@@ -34,7 +39,7 @@ public class EntitySpawner extends EntityType {
     }
 
     @Override
-    public void onSpawnTick(Game game) {
+    public void onSpawnTick(List<Location> entityLocations, Game game) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

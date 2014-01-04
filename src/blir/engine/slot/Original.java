@@ -2,6 +2,7 @@ package blir.engine.slot;
 
 import blir.engine.game.Game;
 import blir.engine.util.Location;
+
 import java.awt.Color;
 import java.util.List;
 
@@ -22,8 +23,15 @@ public class Original extends EntityType {
     }
 
     @Override
-    public void onSpawnTick(Game game) {
-        //List<Location> location = game.getEmptyLocations(x, y, 1);
+    public void onSpawnTick(List<Location> entityLocations, Game game) {
+        for (Location loc : entityLocations) {
+            List<Location> emptyLocations = game.getEmptyLocations(loc.x, loc.y, 1);
+            for (Location empty : emptyLocations) {
+                if (filterByID(game.getNeighbors(empty.x, empty.y, 1), id).size() == 3) {
+                   game.spawnEntityAt(empty.x, empty.y, id);
+                }
+            }
+        }
     }
 
     @Override

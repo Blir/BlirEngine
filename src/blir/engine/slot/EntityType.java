@@ -1,6 +1,7 @@
 package blir.engine.slot;
 
 import blir.engine.game.Game;
+import blir.engine.util.Location;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -58,7 +59,7 @@ public abstract class EntityType {
     
     public abstract void onMoveTick(int x, int y, Game game);
     
-    public abstract void onSpawnTick(Game game);
+    public abstract void onSpawnTick(List<Location> entityLocations, Game game);
     
     public abstract void onCombatTick(int x, int y, Game game);
 

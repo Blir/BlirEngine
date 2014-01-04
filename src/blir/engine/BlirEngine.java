@@ -1,8 +1,10 @@
 package blir.engine;
 
 import blir.engine.game.Game;
-import java.util.LinkedList;
-import java.util.List;
+import blir.engine.swing.SelectorGUI;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -12,17 +14,26 @@ import java.util.logging.Logger;
 public class BlirEngine {
 
     public static final Logger LOGGER = Logger.getLogger(BlirEngine.class.getName());
-    private static final List<Game> games = new LinkedList<>();
-    
+
+    private static final Map<String, Game> games = new HashMap<>();
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+
         registerGame(Game.gameOfLife);
-        Game.gameOfLife.init();
+
+        new SelectorGUI<Game>(games.values()) {
+
+            @Override
+            public void onSelectionMade(Game selection) {
+                selection.init();
+            }
+        }.setVisible(true);
     }
-    
+
     public static void registerGame(Game game) {
-        games.add(game);
+        games.put(game.name, game);
     }
 }
