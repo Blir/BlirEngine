@@ -1,6 +1,8 @@
 package blir.engine.swing;
 
 import blir.engine.game.Game;
+import blir.engine.slot.Entity;
+import blir.engine.slot.EntityType;
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
@@ -22,10 +24,19 @@ public class GamePanel extends JPanel {
         super.paintComponent(g);
         for (int row = 0; row < game.pixels(); row++) {
             for (int col = 0; col < game.pixels(); col++) {
-                g.setColor(game.getEntityAt(row, col) != null
-                           ? game.getEntityTypeByID(game.getEntityAt(row, col).id).color
-                           : Color.BLACK);
-                g.fillRect(15 * col, 15 * row, 14, 14);
+                Entity entity = game.getEntityAt(row, col);
+                if (entity == null) {
+                    g.setColor(Color.BLACK);
+                    g.fillRect(15 * col, 15 * row, 14, 14);
+                } else {
+                    EntityType type = game.getEntityTypeByID(entity.id);
+                    if (type.color != null) {
+                        g.setColor(type.color);
+                        g.fillRect(15 * col, 15 * row, 14, 14);
+                    } else if (type.img != null) {
+                        g.drawImage(type.img, 15 * col, 15 * row, this);
+                    }
+                }
             }
         }
     }
