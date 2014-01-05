@@ -9,7 +9,7 @@ import static blir.engine.BlirEngine.rng;
 public class Location {
 
     public static Location wander(int x, int y, int dist) {
-        return new Location((x - dist) + rng.nextInt(2 * dist), (y - dist) + rng.nextInt(2 * dist));
+        return new Location((x - dist) + rng.nextInt(1 + 2 * dist), (y - dist) + rng.nextInt(1 + 2 * dist));
     }
 
     public static Location idleWander(int x, int y, int dist, int rate) {
