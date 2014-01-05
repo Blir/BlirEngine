@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  * @author Travis
  */
 public class GameGUI extends javax.swing.JFrame {
-    
+
     private final Game game;
     private final GamePanel panel;
 
@@ -34,20 +34,20 @@ public class GameGUI extends javax.swing.JFrame {
         setSize(size, size);
         setLocationRelativeTo(null);
     }
-    
+
     public boolean isRunning() {
         return toggler.getState();
     }
-    
+
     public void disableSpawning() {
         spawnMenuItem.setEnabled(false);
         clearMenuItem.setEnabled(false);
     }
-    
+
     public void disableSpeedChanging() {
         speedMenuItem.setEnabled(false);
     }
-    
+
     public void disableIO() {
         saveMenuItem.setEnabled(false);
         loadMenuItem.setEnabled(false);
@@ -163,7 +163,7 @@ public class GameGUI extends javax.swing.JFrame {
     private void onToggle(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onToggle
         new Thread(game).start();
     }//GEN-LAST:event_onToggle
-    
+
     private int placeX, placeY;
     private int spawnID;
     private boolean erase;
@@ -188,16 +188,16 @@ public class GameGUI extends javax.swing.JFrame {
         if (spawnMenuItem.isEnabled()) {
             int newX = (int) Math.round(evt.getX() / (double) game.PIXEL_SIZE - 1);
             int newY = (int) Math.round(evt.getY() / (double) game.PIXEL_SIZE - 4);
-            
+
             if (!game.isInBounds(newX, newY) || (newX == placeX && newY == placeY)
                 || (game.getEntityAt(newY, newX) == null == erase)) {
-                
+
                 return;
             }
-            
+
             placeX = newX;
             placeY = newY;
-            
+
             Entity entity = new Entity(spawnID);
             game.getEntityTypeByID(spawnID).entityInit(entity);
             game.placeEntityAt(newY, newX, game.getEntityAt(newY, newX) == null ? entity : null);
@@ -238,7 +238,7 @@ public class GameGUI extends javax.swing.JFrame {
             }
         }.setVisible(true);
     }//GEN-LAST:event_onSpawnChange
-    
+
     javax.swing.JFileChooser chooser = new javax.swing.JFileChooser();
 
     private void onSave(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onSave

@@ -33,6 +33,18 @@ public abstract class GenericGame extends Game {
         try {
             while (gui.isRunning()) {
 
+                entityLocations.clear();
+                for (EntityType type : entityTypes.values()) {
+                    entityLocations.put(type, new HashSet<Location>());
+                }
+                for (int row = 0; row < thisTick.length; row++) {
+                    for (int col = 0; col < thisTick[row].length; col++) {
+                        if (thisTick[row][col] != null) {
+                            entityLocations.get(getEntityTypeByID(thisTick[row][col].getID())).add(new Location(row, col));
+                        }
+                    }
+                }
+
                 nextTick = new Entity[50][50];
 
                 for (int row = 0; row < thisTick.length; row++) {
@@ -76,10 +88,6 @@ public abstract class GenericGame extends Game {
                 }
 
                 state = null;
-                entityLocations.clear();
-                for (EntityType type : entityTypes.values()) {
-                    entityLocations.put(type, new HashSet<Location>());
-                }
 
                 for (int row = 0; row < thisTick.length; row++) {
                     for (int col = 0; col < thisTick[row].length; col++) {
@@ -88,7 +96,6 @@ public abstract class GenericGame extends Game {
                         }
                         if (nextTick[row][col] != null) {
                             nextTick[row][col].tick();
-                            entityLocations.get(getEntityTypeByID(nextTick[row][col].getID())).add(new Location(row, col));
                         }
                     }
                 }
