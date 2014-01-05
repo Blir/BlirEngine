@@ -8,6 +8,8 @@ import java.io.*;
 import java.util.logging.Level;
 import javax.swing.JOptionPane;
 
+import static blir.engine.game.Game.*;
+
 /**
  *
  * @author Travis
@@ -194,7 +196,7 @@ public class GameGUI extends javax.swing.JFrame {
             placeX = newX;
             placeY = newY;
 
-            game.placeEntityAt(newY, newX, game.getEntityAt(newX, newY) == null ? new Entity(spawnID) : null);
+            game.placeEntityAt(newY, newX, game.getEntityAt(newY, newX) == null ? new Entity(spawnID) : null);
             repaint();
         }
     }//GEN-LAST:event_onMouseDragged

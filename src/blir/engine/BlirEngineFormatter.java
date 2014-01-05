@@ -36,10 +36,7 @@ public class BlirEngineFormatter extends Formatter {
         if (msg != null) {
             Object[] parameters = record.getParameters();
             if (parameters != null) {
-                for (int idx = 0; idx < parameters.length; idx++) {
-                    msg = msg.replace("{" + idx + "}",
-                                      String.valueOf(parameters[idx]));
-                }
+                msg = String.format(msg, parameters);
             }
             sb.append(msg);
         }
