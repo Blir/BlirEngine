@@ -248,7 +248,7 @@ public class GameGUI extends javax.swing.JFrame {
                         if (entity != null) {
                             dos.writeInt(row);
                             dos.writeInt(col);
-                            dos.writeInt(entity.id);
+                            dos.writeInt(entity.getID());
                         }
                     }
                 }

@@ -18,6 +18,7 @@ public abstract class Game implements Runnable {
 
     public static final GameOfLife gameOfLife = new GameOfLife();
     public static final ArchIorZard archiorzard = new ArchIorZard();
+    public static final Apocalypse apocalypse = new Apocalypse();
 
     public static void log(Level level, String msg, Throwable thrown) {
         BlirEngine.LOGGER.log(level, msg, thrown);
@@ -63,13 +64,32 @@ public abstract class Game implements Runnable {
         }
     }
 
-    public List<Entity> getNeighbors(int row, int col, int dist) {
+    public List<Entity> getSquareNeighbors(int row, int col, int dist) {
         List<Entity> neighbors = new LinkedList<>();
 
         for (int x = row - dist; x <= row + dist; x++) {
-            if (x >= 0 && x < thisTick.length - 1) {
+            if (isInBounds(x)) {
                 for (int y = col - dist; y <= col + dist; y++) {
-                    if (y > 0 && y < thisTick[x].length - 1 && thisTick[x][y] != null
+                    if (isInBounds(y) && thisTick[x][y] != null
+                        && !(x == row && y == col)) {
+
+                        neighbors.add(thisTick[x][y]);
+                    }
+                }
+            }
+        }
+
+        return neighbors;
+    }
+
+    public List<Entity> getNeighorSlice(int row, int col, int dist) {
+        List<Entity> neighbors = new LinkedList<>();
+
+        for (int x = row - dist; x <= row + dist; x++) {
+            if (isInBounds(x)) {
+                for (int y = col - dist; y <= col + dist; y++) {
+                    if (isInBounds(y) && thisTick[x][y] != null
+                        && Math.abs((row - x)) + Math.abs((col - y)) == dist
                         && !(x == row && y == col)) {
 
                         neighbors.add(thisTick[x][y]);
@@ -130,9 +150,14 @@ public abstract class Game implements Runnable {
         }
         return false;
     }
-    
-    public boolean isInBounds(int x, int y) {
-        return x >= 0 && y >= 0 && x < thisTick.length && y < thisTick.length;
+
+    public boolean isInBounds(int... coords) {
+        for (int coord : coords) {
+            if (coord < 0 || coord >= thisTick.length) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public EntityType getEntityTypeByID(int id) {

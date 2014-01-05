@@ -44,7 +44,7 @@ public abstract class GenericGame extends Game {
                 for (int row = 0; row < thisTick.length; row++) {
                     for (int col = 0; col < thisTick[row].length; col++) {
                         if (thisTick[row][col] != null) {
-                            EntityType type = entityTypes.get(thisTick[row][col].id);
+                            EntityType type = entityTypes.get(thisTick[row][col].getID());
                             type.onMoveTick(row, col, this);
                             entityLocations.get(type).add(new Location(row, col));
                         }
@@ -70,7 +70,7 @@ public abstract class GenericGame extends Game {
                 for (int row = 0; row < thisTick.length; row++) {
                     for (int col = 0; col < thisTick[row].length; col++) {
                         if (thisTick[row][col] != null) {
-                            entityTypes.get(thisTick[row][col].id)
+                            entityTypes.get(thisTick[row][col].getID())
                                     .onCombatTick(row, col, this);
                         }
                     }

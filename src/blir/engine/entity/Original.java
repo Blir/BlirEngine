@@ -18,7 +18,7 @@ public class Original extends EntityType {
 
     @Override
     public void onMoveTick(int x, int y, Game game) {
-        int population = filterByID(game.getNeighbors(x, y, 1), id).size();
+        int population = filterByID(game.getSquareNeighbors(x, y, 1), id).size();
         game.getEntityAt(x, y).setAlive(population > 1 && population < 4);
     }
 
@@ -27,7 +27,7 @@ public class Original extends EntityType {
         for (Location loc : entityLocations) {
             List<Location> emptyLocations = game.getEmptyLocations(loc.x, loc.y, 1);
             for (Location empty : emptyLocations) {
-                if (filterByID(game.getNeighbors(empty.x, empty.y, 1), id).size() == 3) {
+                if (filterByID(game.getSquareNeighbors(empty.x, empty.y, 1), id).size() == 3) {
                    game.spawnEntityAt(empty.x, empty.y, id);
                 }
             }

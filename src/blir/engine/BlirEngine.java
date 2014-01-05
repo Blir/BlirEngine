@@ -36,6 +36,7 @@ public class BlirEngine {
 
         registerGame(Game.gameOfLife);
         registerGame(Game.archiorzard);
+        registerGame(Game.apocalypse);
 
         new SelectorGUI<Game>(games.values()) {
 

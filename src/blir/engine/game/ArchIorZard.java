@@ -10,7 +10,7 @@ public class ArchIorZard extends GenericGame {
 
     public ArchIorZard() {
         super("ArchIorZard", EntityType.wall.id);
-        speed = 100;
+        speed = 150;
     }
 
     @Override

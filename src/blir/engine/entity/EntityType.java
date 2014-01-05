@@ -19,11 +19,13 @@ public abstract class EntityType {
     public static final Archer archer = new Archer(2, 3);
     public static final Warrior warrior = new Warrior(4, 5);
     public static final Wizard wizard = new Wizard(6, 7);
+    public static final Human human = new Human(8);
+    public static final Zombie zombie = new Zombie(9);
 
     public static List<Entity> filterByID(List<Entity> slots, int id) {
         List<Entity> filtered = new LinkedList<>();
         for (Entity slot : slots) {
-            if (slot.id == id) {
+            if (slot.getID() == id) {
                 filtered.add(slot);
             }
         }
@@ -34,7 +36,7 @@ public abstract class EntityType {
                                   Game game) {
         int totalDmg = 0;
         for (Entity slot : slots) {
-            Integer dmg = map.get(slot.id);
+            Integer dmg = map.get(slot.getID());
             if (dmg != null) {
                 totalDmg += dmg;
                 slot.damage(game, dmg);

@@ -40,6 +40,6 @@ public abstract class CombatEntityType extends MortalEntityType {
     @Override
     public void onCombatTick(int x, int y, Game game) {
         super.onCombatTick(x, y, game);
-        damageByMap(game.getNeighbors(x, y, 1), damageMap, game);
+        damageByMap(game.getSquareNeighbors(x, y, 1), damageMap, game);
     }
 }

@@ -9,16 +9,12 @@ import static blir.engine.BlirEngine.rng;
 public class Location {
 
     public static Location wander(int x, int y, int dist) {
-        int xDist = rng.nextInt(dist + 1);
-        int yDist = rng.nextInt(dist + 1);
-        return new Location(x + rng.nextInt(2 + xDist) - xDist, y + rng.nextInt(2 + yDist) - yDist);
+        return new Location((x - dist) + rng.nextInt(2 * dist), (y - dist) + rng.nextInt(2 * dist));
     }
 
     public static Location idleWander(int x, int y, int dist, int rate) {
         if (rng.nextInt(100) > rate - 1) {
-            int xDist = rng.nextInt(dist + 1);
-            int yDist = rng.nextInt(dist + 1);
-            return new Location(x + rng.nextInt(2 + xDist) - xDist, y + rng.nextInt(2 + yDist) - yDist);
+            return wander(x, y, dist);
         }
         return null;
     }

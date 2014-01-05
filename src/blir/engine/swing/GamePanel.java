@@ -29,7 +29,7 @@ public class GamePanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.fillRect(15 * col, 15 * row, 14, 14);
                 } else {
-                    EntityType type = game.getEntityTypeByID(entity.id);
+                    EntityType type = game.getEntityTypeByID(entity.getID());
                     if (type.color != null) {
                         g.setColor(type.color);
                         g.fillRect(15 * col, 15 * row, 14, 14);
