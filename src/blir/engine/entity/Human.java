@@ -1,10 +1,13 @@
 package blir.engine.entity;
 
 import blir.engine.game.Game;
+import blir.engine.item.Item;
+import blir.engine.item.ItemStack;
 import blir.engine.util.Location;
+
 import java.awt.Color;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+
 
 /**
  *
@@ -29,16 +32,33 @@ public class Human extends CombatEntityType {
     }
 
     @Override
-    public void onSpawnTick(List<Location> entityLocations, Game game) {
-        for (Location loc : entityLocations) {
-            List<Location> emptyLocations = game.getEmptyLocations(loc.x, loc.y, 1);
-            for (Location empty : emptyLocations) {
-                if (filterByID(game.getNeighorSlice(empty.x, empty.y, 1), id).size() == 2
-                    && game.getNeighorSlice(empty.x, empty.y, 2).isEmpty()) {
-
-                    game.spawnEntityAt(empty.x, empty.y, id);
+    public void onSpawnTick(Game game) {
+        Set<Location> entityLocations = game.getEntityLocations(this);
+        Set<Location> emptyLocations = new HashSet<>();
+        for (Location entity : entityLocations) {
+            ItemStack walls = game.getEntityAt(entity.x, entity.y).getItemStackByID(Item.wall.id);
+            if (walls.getAmount() > 0) {
+                Location loc = game.getFirstSquareNeighborLocationByID(entity.x, entity.y, 1, zombie.id);
+                if (loc != null) {
+                    Location wallLoc = Location.towards(entity, loc, 1);
+                    game.spawnEntityAt(wallLoc.x, wallLoc.y, wall);
+                    walls.changeAmountBy(-1);
+                    break;
                 }
             }
+            emptyLocations.addAll(game.getEmptyLocations(entity.x, entity.y, 1));
         }
+        for (Location empty : emptyLocations) {
+            if (filterByID(game.getNeighorSlice(empty.x, empty.y, 1), id).size() == 2
+                && game.getNeighorSlice(empty.x, empty.y, 2).isEmpty()) {
+
+                game.spawnEntityAt(empty.x, empty.y, this);
+            }
+        }
+    }
+
+    @Override
+    public void entityInit(Entity entity) {
+        entity.addItemStack(new ItemStack(Item.wall.id));
     }
 }

@@ -9,7 +9,7 @@ import blir.engine.entity.EntityType;
 public class GameOfLife extends GenericGame {
 
     public GameOfLife() {
-        super("Game Of Life", EntityType.original.id);
+        super("Game Of Life", EntityType.original.id, 15);
         speed = 200;
     }
 

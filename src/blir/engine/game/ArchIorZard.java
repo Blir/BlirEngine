@@ -9,7 +9,7 @@ import blir.engine.entity.EntityType;
 public class ArchIorZard extends GenericGame {
 
     public ArchIorZard() {
-        super("ArchIorZard", EntityType.wall.id);
+        super("ArchIorZard", EntityType.wall.id, 15);
         speed = 150;
     }
 
@@ -19,6 +19,9 @@ public class ArchIorZard extends GenericGame {
         registerEntityType(EntityType.archer);
         registerEntityType(EntityType.warrior);
         registerEntityType(EntityType.wizard);
+        scoreboard.addTeam(EntityType.archer);
+        scoreboard.addTeam(EntityType.warrior);
+        scoreboard.addTeam(EntityType.wizard);
         gui.setVisible(true);
     }
 }

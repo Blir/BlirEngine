@@ -8,14 +8,12 @@ import java.io.*;
 import java.util.logging.Level;
 import javax.swing.JOptionPane;
 
-import static blir.engine.game.Game.*;
-
 /**
  *
  * @author Travis
  */
 public class GameGUI extends javax.swing.JFrame {
-
+    
     private final Game game;
     private final GamePanel panel;
 
@@ -32,22 +30,24 @@ public class GameGUI extends javax.swing.JFrame {
         setContentPane(panel);
         initComponents();
         setTitle(game.name);
+        int size = game.PIXEL_SIZE * game.size() + 75;
+        setSize(size, size);
         setLocationRelativeTo(null);
     }
-
+    
     public boolean isRunning() {
         return toggler.getState();
     }
-
+    
     public void disableSpawning() {
         spawnMenuItem.setEnabled(false);
         clearMenuItem.setEnabled(false);
     }
-
+    
     public void disableSpeedChanging() {
         speedMenuItem.setEnabled(false);
     }
-
+    
     public void disableIO() {
         saveMenuItem.setEnabled(false);
         loadMenuItem.setEnabled(false);
@@ -163,19 +163,21 @@ public class GameGUI extends javax.swing.JFrame {
     private void onToggle(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onToggle
         new Thread(game).start();
     }//GEN-LAST:event_onToggle
-
+    
     private int placeX, placeY;
     private int spawnID;
     private boolean erase;
 
     private void onMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onMouseClicked
         if (spawnMenuItem.isEnabled()) {
-            int newX = (int) Math.round(evt.getX() / 15.00 - 1);
-            int newY = (int) Math.round(evt.getY() / 15.00 - 4);
+            int newX = (int) Math.round(evt.getX() / (double) game.PIXEL_SIZE - 1);
+            int newY = (int) Math.round(evt.getY() / (double) game.PIXEL_SIZE - 4);
             if (game.isInBounds(newX, newY)) {
+                Entity entity = new Entity(spawnID);
+                game.getEntityTypeByID(spawnID).entityInit(entity);
                 game.placeEntityAt(newY, newX,
                                    game.getEntityAt(newY, newX) == null
-                                   ? new Entity(spawnID)
+                                   ? entity
                                    : null);
             }
             repaint();
@@ -184,27 +186,29 @@ public class GameGUI extends javax.swing.JFrame {
 
     private void onMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onMouseDragged
         if (spawnMenuItem.isEnabled()) {
-            int newX = (int) Math.round(evt.getX() / 15.00 - 1);
-            int newY = (int) Math.round(evt.getY() / 15.00 - 4);
-
+            int newX = (int) Math.round(evt.getX() / (double) game.PIXEL_SIZE - 1);
+            int newY = (int) Math.round(evt.getY() / (double) game.PIXEL_SIZE - 4);
+            
             if (!game.isInBounds(newX, newY) || (newX == placeX && newY == placeY)
                 || (game.getEntityAt(newY, newX) == null == erase)) {
-
+                
                 return;
             }
-
+            
             placeX = newX;
             placeY = newY;
-
-            game.placeEntityAt(newY, newX, game.getEntityAt(newY, newX) == null ? new Entity(spawnID) : null);
+            
+            Entity entity = new Entity(spawnID);
+            game.getEntityTypeByID(spawnID).entityInit(entity);
+            game.placeEntityAt(newY, newX, game.getEntityAt(newY, newX) == null ? entity : null);
             repaint();
         }
     }//GEN-LAST:event_onMouseDragged
 
     private void onMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onMousePressed
         if (spawnMenuItem.isEnabled()) {
-            int newX = (int) Math.round(evt.getX() / 15.00 - 1);
-            int newY = (int) Math.round(evt.getY() / 15.00 - 4);
+            int newX = (int) Math.round(evt.getX() / (double) game.PIXEL_SIZE - 1);
+            int newY = (int) Math.round(evt.getY() / (double) game.PIXEL_SIZE - 4);
             if (game.isInBounds(newX, newY)) {
                 erase = game.getEntityAt(newY, newX) != null;
             }
@@ -234,7 +238,7 @@ public class GameGUI extends javax.swing.JFrame {
             }
         }.setVisible(true);
     }//GEN-LAST:event_onSpawnChange
-
+    
     javax.swing.JFileChooser chooser = new javax.swing.JFileChooser();
 
     private void onSave(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onSave
@@ -242,8 +246,8 @@ public class GameGUI extends javax.swing.JFrame {
         chooser.showSaveDialog(rootPane);
         if (chooser.getSelectedFile() != null) {
             try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(chooser.getSelectedFile()))) {
-                for (int row = 0; row < game.pixels(); row++) {
-                    for (int col = 0; col < game.pixels(); col++) {
+                for (int row = 0; row < game.size(); row++) {
+                    for (int col = 0; col < game.size(); col++) {
                         Entity entity = game.getEntityAt(row, col);
                         if (entity != null) {
                             dos.writeInt(row);

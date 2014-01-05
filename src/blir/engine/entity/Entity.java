@@ -2,6 +2,10 @@ package blir.engine.entity;
 
 import blir.engine.game.Game;
 import blir.engine.game.GameState;
+import blir.engine.item.ItemStack;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -13,6 +17,7 @@ public class Entity {
     private boolean alive = true;
     private int dmg;
     private int ticksLived;
+    private final Map<Integer, ItemStack> inventory = new HashMap<>();
 
     public Entity(int id) {
         this.id = id;
@@ -59,5 +64,26 @@ public class Entity {
 
     public int getTicksLived() {
         return ticksLived;
+    }
+    
+    public ItemStack getItemStackByID(int id) {
+        return inventory.get(id);
+    }
+    
+    public Collection<ItemStack> getInventory() {
+        return inventory.values();
+    }
+    
+    public void removeItemStackByID(int id) {
+        inventory.remove(id);
+    }
+    
+    public void addItemStack(ItemStack is) {
+        inventory.put(is.id, is);
+    }
+    
+    @Override
+    public String toString() {
+        return String.valueOf(id);
     }
 }

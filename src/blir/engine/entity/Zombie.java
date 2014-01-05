@@ -32,7 +32,7 @@ public class Zombie extends CombatEntityType {
     }
 
     @Override
-    public void onSpawnTick(List<Location> entityLocations, Game game) {
+    public void onSpawnTick(Game game) {
     }
 
     @Override
@@ -45,5 +45,9 @@ public class Zombie extends CombatEntityType {
                 entity.setAlive(true);
             }
         }
+    }
+
+    @Override
+    public void entityInit(Entity entity) {
     }
 }

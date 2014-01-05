@@ -5,6 +5,7 @@ import blir.engine.util.Location;
 import java.awt.Color;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -25,7 +26,11 @@ public class Wall extends MortalEntityType {
     }
 
     @Override
-    public void onSpawnTick(List<Location> entityLocations, Game game) {
+    public void onSpawnTick(Game game) {
+    }
+
+    @Override
+    public void entityInit(Entity entity) {
     }
     
 }

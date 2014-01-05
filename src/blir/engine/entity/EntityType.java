@@ -2,11 +2,10 @@ package blir.engine.entity;
 
 import blir.engine.game.Game;
 import blir.engine.util.Location;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -22,11 +21,21 @@ public abstract class EntityType {
     public static final Human human = new Human(8);
     public static final Zombie zombie = new Zombie(9);
 
-    public static List<Entity> filterByID(List<Entity> slots, int id) {
+    public static List<Entity> filterByID(List<Entity> list, int id) {
         List<Entity> filtered = new LinkedList<>();
-        for (Entity slot : slots) {
+        for (Entity slot : list) {
             if (slot.getID() == id) {
                 filtered.add(slot);
+            }
+        }
+        return filtered;
+    }
+    
+    public static Map<Entity, Location> filterByID(Map<Entity, Location> map, int id) {
+        Map<Entity, Location> filtered = new HashMap<>();
+        for (Map.Entry<Entity, Location> entry : map.entrySet()) {
+            if (entry.getKey().getID() == id) {
+                filtered.put(entry.getKey(), entry.getValue());
             }
         }
         return filtered;
@@ -78,10 +87,12 @@ public abstract class EntityType {
     }
 
     public abstract void init();
+    
+    public abstract void entityInit(Entity entity);
 
     public abstract void onMoveTick(int x, int y, Game game);
 
-    public abstract void onSpawnTick(List<Location> entityLocations, Game game);
+    public abstract void onSpawnTick(Game game);
 
     public abstract void onCombatTick(int x, int y, Game game);
 

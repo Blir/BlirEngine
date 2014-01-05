@@ -10,8 +10,9 @@ import java.util.Map;
  *
  * @author Blir
  */
-public abstract class CombatEntityType extends MortalEntityType {
+public abstract class CombatEntityType extends MortalEntityType implements Team {
 
+    int damageDealt;
     Map<Integer, Integer> damageMap;
 
     public CombatEntityType(int id, String name, Color color,
@@ -40,6 +41,16 @@ public abstract class CombatEntityType extends MortalEntityType {
     @Override
     public void onCombatTick(int x, int y, Game game) {
         super.onCombatTick(x, y, game);
-        damageByMap(game.getSquareNeighbors(x, y, 1), damageMap, game);
+        damageDealt += damageByMap(game.getSquareNeighbors(x, y, 1), damageMap, game);
+    }
+    
+    @Override
+    public int getScore() {
+        return damageDealt;
+    }
+    
+    @Override
+    public String getTeamName() {
+        return name;
     }
 }

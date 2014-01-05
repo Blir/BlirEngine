@@ -4,7 +4,7 @@ import blir.engine.game.Game;
 import blir.engine.util.Location;
 
 import java.awt.Color;
-import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -23,12 +23,13 @@ public class Original extends EntityType {
     }
 
     @Override
-    public void onSpawnTick(List<Location> entityLocations, Game game) {
+    public void onSpawnTick(Game game) {
+        Set<Location> entityLocations = game.getEntityLocations(this);
         for (Location loc : entityLocations) {
-            List<Location> emptyLocations = game.getEmptyLocations(loc.x, loc.y, 1);
+            Set<Location> emptyLocations = game.getEmptyLocations(loc.x, loc.y, 1);
             for (Location empty : emptyLocations) {
                 if (filterByID(game.getSquareNeighbors(empty.x, empty.y, 1), id).size() == 3) {
-                   game.spawnEntityAt(empty.x, empty.y, id);
+                   game.spawnEntityAt(empty.x, empty.y, this);
                 }
             }
         }
@@ -40,5 +41,9 @@ public class Original extends EntityType {
 
     @Override
     public void init() {
+    }
+
+    @Override
+    public void entityInit(Entity entity) {
     }
 }

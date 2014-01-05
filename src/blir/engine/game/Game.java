@@ -33,24 +33,31 @@ public abstract class Game implements Runnable {
     }
 
     public final String name;
+    public final int PIXEL_SIZE;
 
     final GameGUI gui;
     final Map<Integer, EntityType> entityTypes = new HashMap<>();
     final Map<Integer, Item> itemTypes = new HashMap<>();
+    final Scoreboard scoreboard = new Scoreboard();
+
     GameState state;
+    final Map<EntityType, Set<Location>> entityLocations = new HashMap<>();
     Entity[][] thisTick;
     Entity[][] nextTick;
     int tick;
     int speed;
 
-    public Game(String name, int spawnInit) {
+    public Game(String name, int spawnInit, int pixelSize) {
         this.name = name;
+        this.PIXEL_SIZE = pixelSize;
         this.gui = new GameGUI(this, spawnInit);
     }
 
     public abstract void init();
 
     public abstract void reset();
+    
+    public abstract int size();
 
     public void registerItemType(Item item) {
         itemTypes.put(item.id, item);
@@ -101,12 +108,45 @@ public abstract class Game implements Runnable {
         return neighbors;
     }
 
-    public List<Location> getEmptyLocations(int row, int col, int dist) {
-        List<Location> locations = new LinkedList<>();
+    public Map<Entity, Location> getSquareNeighborLocations(int row, int col,
+                                                            int dist) {
+
+        Map<Entity, Location> neighborLocations = new HashMap<>();
         for (int x = row - dist; x <= row + dist; x++) {
-            if (x >= 0 && x < thisTick.length - 1) {
+            if (isInBounds(x)) {
                 for (int y = col - dist; y <= col + dist; y++) {
-                    if (y > 0 && y < thisTick[x].length - 1 && thisTick[x][y] == null
+                    if (isInBounds(y) && thisTick[x][y] != null
+                        && !(x == row && y == col)) {
+
+                        neighborLocations.put(thisTick[x][y], new Location(x, y));
+                    }
+                }
+            }
+        }
+        return neighborLocations;
+    }
+    
+    public Location getFirstSquareNeighborLocationByID(int row, int col, int dist, int id) {
+        for (int x = row - dist; x <= row + dist; x++) {
+            if (isInBounds(x)) {
+                for (int y = col - dist; y <= col + dist; y++) {
+                    if (isInBounds(y) && thisTick[x][y] != null
+                        && !(x == row && y == col) && thisTick[x][y].getID() == id) {
+
+                        return new Location(x, y);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public Set<Location> getEmptyLocations(int row, int col, int dist) {
+        Set<Location> locations = new HashSet<>();
+        for (int x = row - dist; x <= row + dist; x++) {
+            if (isInBounds(x)) {
+                for (int y = col - dist; y <= col + dist; y++) {
+                    if (isInBounds(y) && thisTick[x][y] == null
                         && !(x == row && y == col)) {
 
                         locations.add(new Location(x, y));
@@ -128,12 +168,14 @@ public abstract class Game implements Runnable {
         thisTick[x][y] = entity;
     }
 
-    public boolean spawnEntityAt(int x, int y, int id) {
+    public boolean spawnEntityAt(int x, int y, EntityType type) {
         if (state != GameState.SPAWN_TICK) {
             throw new IllegalStateException("not in spawn tick");
         }
         if (isInBounds(x, y) && nextTick[x][y] == null) {
-            nextTick[x][y] = new Entity(id);
+            Entity entity = new Entity(type.id);
+            type.entityInit(entity);
+            nextTick[x][y] = entity;
             return true;
         }
         return false;
@@ -149,6 +191,10 @@ public abstract class Game implements Runnable {
             return true;
         }
         return false;
+    }
+    
+    public Set<Location> getEntityLocations(EntityType type) {
+        return entityLocations.get(type);
     }
 
     public boolean isInBounds(int... coords) {
@@ -187,6 +233,10 @@ public abstract class Game implements Runnable {
     public int getSpeed() {
         return speed;
     }
+    
+    public void updateScoreboard() {
+        gui.setTitle(scoreboard.toString(name));
+    }
 
     @Override
     public String toString() {
@@ -201,9 +251,5 @@ public abstract class Game implements Runnable {
     @Override
     public int hashCode() {
         return name.hashCode();
-    }
-
-    public int pixels() {
-        return thisTick == null ? 0 : thisTick.length;
     }
 }

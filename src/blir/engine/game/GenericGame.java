@@ -13,14 +13,19 @@ import java.util.logging.Level;
  */
 public abstract class GenericGame extends Game {
 
-    public GenericGame(String name, int spawnInit) {
-        super(name, spawnInit);
+    public GenericGame(String name, int spawnInit, int pixelSize) {
+        super(name, spawnInit, pixelSize);
         thisTick = new Entity[50][50];
     }
 
     @Override
     public void reset() {
         thisTick = new Entity[50][50];
+    }
+
+    @Override
+    public int size() {
+        return 50;
     }
 
     @Override
@@ -34,11 +39,6 @@ public abstract class GenericGame extends Game {
                     System.arraycopy(thisTick[row], 0, nextTick[row], 0, thisTick[row].length);
                 }
 
-                Map<EntityType, List<Location>> entityLocations = new HashMap<>();
-                for (EntityType type : entityTypes.values()) {
-                    entityLocations.put(type, new LinkedList<Location>());
-                }
-
                 state = GameState.MOVE_TICK;
 
                 for (int row = 0; row < thisTick.length; row++) {
@@ -46,7 +46,6 @@ public abstract class GenericGame extends Game {
                         if (thisTick[row][col] != null) {
                             EntityType type = entityTypes.get(thisTick[row][col].getID());
                             type.onMoveTick(row, col, this);
-                            entityLocations.get(type).add(new Location(row, col));
                         }
                     }
                 }
@@ -62,7 +61,7 @@ public abstract class GenericGame extends Game {
                 state = GameState.SPAWN_TICK;
 
                 for (EntityType type : entityTypes.values()) {
-                    type.onSpawnTick(entityLocations.get(type), this);
+                    type.onSpawnTick(this);
                 }
 
                 state = GameState.COMBAT_TICK;
@@ -76,6 +75,12 @@ public abstract class GenericGame extends Game {
                     }
                 }
 
+                state = null;
+                entityLocations.clear();
+                for (EntityType type : entityTypes.values()) {
+                    entityLocations.put(type, new HashSet<Location>());
+                }
+
                 for (int row = 0; row < thisTick.length; row++) {
                     for (int col = 0; col < thisTick[row].length; col++) {
                         if (thisTick[row][col] != null && !thisTick[row][col].isAlive()) {
@@ -83,14 +88,14 @@ public abstract class GenericGame extends Game {
                         }
                         if (nextTick[row][col] != null) {
                             nextTick[row][col].tick();
+                            entityLocations.get(getEntityTypeByID(nextTick[row][col].getID())).add(new Location(row, col));
                         }
                     }
                 }
 
-                state = null;
-
                 thisTick = nextTick;
                 gui.repaint();
+                updateScoreboard();
                 Thread.sleep(speed);
             }
         } catch (InterruptedException ex) {

@@ -5,8 +5,7 @@ import blir.engine.util.Location;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -39,12 +38,17 @@ public class EntitySpawner extends EntityType {
     }
 
     @Override
-    public void onSpawnTick(List<Location> entityLocations, Game game) {
-        if (entityLocations.size() < cap) {
-            for (Location loc : entityLocations) {
-                Entity entity = game.getEntityAt(loc.x, loc.y);
-                if (entity.getTicksLived() % rate == 0) {
-                    game.spawnEntityAt(loc.x, loc.y, spawnID);
+    public void onSpawnTick(Game game) {
+        EntityType toSpawn = game.getEntityTypeByID(spawnID);
+        Set<Location> existing = game.getEntityLocations(toSpawn);
+        if (existing != null && existing.size() < cap) {
+            Set<Location> entityLocations = game.getEntityLocations(this);
+            for (Location entity : entityLocations) {
+                if (game.getEntityAt(entity.x, entity.y).getTicksLived() % rate == 0) {
+                    Set<Location> emptyLocations = game.getEmptyLocations(entity.x, entity.y, 1);
+                    for (Location loc : emptyLocations) {
+                        game.spawnEntityAt(loc.x, loc.y, toSpawn);
+                    }
                 }
             }
         }
@@ -56,5 +60,9 @@ public class EntitySpawner extends EntityType {
 
     @Override
     public void init() {
+    }
+
+    @Override
+    public void entityInit(Entity entity) {
     }
 }
