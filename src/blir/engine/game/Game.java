@@ -125,6 +125,7 @@ public abstract class Game implements Runnable {
         }
         if (isInBounds(toX, toY) && nextTick[toX][toY] == null) {
             nextTick[toX][toY] = thisTick[fromX][fromY];
+            thisTick[fromX][fromY].setAlive(false);
             return true;
         }
         return false;

@@ -46,6 +46,7 @@ public class Entity {
     }
     
     public void tick() {
+        alive = true;
         ticksLived++;
     }
     

@@ -17,7 +17,7 @@ public abstract class GenericGame extends Game {
         super(name, spawnInit);
         thisTick = new Entity[50][50];
     }
-    
+
     @Override
     public void reset() {
         thisTick = new Entity[50][50];
@@ -78,12 +78,11 @@ public abstract class GenericGame extends Game {
 
                 for (int row = 0; row < thisTick.length; row++) {
                     for (int col = 0; col < thisTick[row].length; col++) {
-                        if (thisTick[row][col] != null) {
-                            if (thisTick[row][col].isAlive()) {
-                                nextTick[row][col].tick();
-                            } else {
-                                nextTick[row][col] = null;
-                            }
+                        if (thisTick[row][col] != null && !thisTick[row][col].isAlive()) {
+                            nextTick[row][col] = null;
+                        }
+                        if (nextTick[row][col] != null) {
+                            nextTick[row][col].tick();
                         }
                     }
                 }

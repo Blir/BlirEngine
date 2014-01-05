@@ -185,7 +185,7 @@ public class GameGUI extends javax.swing.JFrame {
             int newX = (int) Math.round(evt.getX() / 15.00 - 1);
             int newY = (int) Math.round(evt.getY() / 15.00 - 4);
 
-            if (game.isInBounds(newX, newY) || (newX == placeX && newY == placeY)
+            if (!game.isInBounds(newX, newY) || (newX == placeX && newY == placeY)
                 || (game.getEntityAt(newY, newX) == null == erase)) {
 
                 return;
