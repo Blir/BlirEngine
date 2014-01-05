@@ -1,8 +1,8 @@
 package blir.engine.swing;
 
 import blir.engine.game.Game;
-import blir.engine.slot.Entity;
-import blir.engine.slot.EntityType;
+import blir.engine.entity.Entity;
+import blir.engine.entity.EntityType;
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;

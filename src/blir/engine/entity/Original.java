@@ -1,4 +1,4 @@
-package blir.engine.slot;
+package blir.engine.entity;
 
 import blir.engine.game.Game;
 import blir.engine.util.Location;
@@ -36,5 +36,9 @@ public class Original extends EntityType {
 
     @Override
     public void onCombatTick(int x, int y, Game game) {
+    }
+
+    @Override
+    public void init() {
     }
 }

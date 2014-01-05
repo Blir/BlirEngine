@@ -5,6 +5,10 @@ import blir.engine.swing.SelectorGUI;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -14,6 +18,7 @@ import java.util.logging.Logger;
 public class BlirEngine {
 
     public static final Logger LOGGER = Logger.getLogger(BlirEngine.class.getName());
+    public static final Random rng = new Random();
 
     private static final Map<String, Game> games = new HashMap<>();
 
@@ -22,7 +27,15 @@ public class BlirEngine {
      */
     public static void main(String[] args) {
 
+        LOGGER.setUseParentHandlers(false);
+        LOGGER.setLevel(Level.ALL);
+        Handler handler = new ConsoleHandler();
+        handler.setFormatter(new BlirEngineFormatter("yyyy/MM/dd HH:mm:ss"));
+        handler.setLevel(Level.ALL);
+        LOGGER.addHandler(handler);
+
         registerGame(Game.gameOfLife);
+        registerGame(Game.archiorzard);
 
         new SelectorGUI<Game>(games.values()) {
 

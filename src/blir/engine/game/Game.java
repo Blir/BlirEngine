@@ -3,8 +3,8 @@ package blir.engine.game;
 import blir.engine.BlirEngine;
 import blir.engine.swing.GameGUI;
 import blir.engine.item.Item;
-import blir.engine.slot.Entity;
-import blir.engine.slot.EntityType;
+import blir.engine.entity.Entity;
+import blir.engine.entity.EntityType;
 import blir.engine.util.Location;
 
 import java.util.*;
@@ -17,6 +17,7 @@ import java.util.logging.Level;
 public abstract class Game implements Runnable {
 
     public static final GameOfLife gameOfLife = new GameOfLife();
+    public static final ArchIorZard archiorzard = new ArchIorZard();
 
     public static void log(Level level, String msg, Throwable thrown) {
         BlirEngine.LOGGER.log(level, msg, thrown);
@@ -26,21 +27,29 @@ public abstract class Game implements Runnable {
         BlirEngine.LOGGER.log(level, msg, params);
     }
 
+    public static void log(Level level, String msg) {
+        BlirEngine.LOGGER.log(level, msg);
+    }
+
     public final String name;
 
-    final GameGUI gui = new GameGUI(this);
+    final GameGUI gui;
     final Map<Integer, EntityType> entityTypes = new HashMap<>();
     final Map<Integer, Item> itemTypes = new HashMap<>();
     GameState state;
     Entity[][] thisTick;
     Entity[][] nextTick;
     int tick;
+    int speed;
 
-    public Game(String name) {
+    public Game(String name, int spawnInit) {
         this.name = name;
+        this.gui = new GameGUI(this, spawnInit);
     }
 
     public abstract void init();
+
+    public abstract void reset();
 
     public void registerItemType(Item item) {
         itemTypes.put(item.id, item);
@@ -48,8 +57,9 @@ public abstract class Game implements Runnable {
 
     public void registerEntityType(EntityType type) {
         entityTypes.put(type.id, type);
+        type.init();
         if (type.spawner != null) {
-            entityTypes.put(type.spawner.id, type.spawner);
+            registerEntityType(type.spawner);
         }
     }
 
@@ -57,7 +67,7 @@ public abstract class Game implements Runnable {
         List<Entity> neighbors = new LinkedList<>();
 
         for (int x = row - dist; x <= row + dist; x++) {
-            if (x > 0 && x < thisTick.length - 1) {
+            if (x >= 0 && x < thisTick.length - 1) {
                 for (int y = col - dist; y <= col + dist; y++) {
                     if (y > 0 && y < thisTick[x].length - 1 && thisTick[x][y] != null
                         && !(x == row && y == col)) {
@@ -74,7 +84,7 @@ public abstract class Game implements Runnable {
     public List<Location> getEmptyLocations(int row, int col, int dist) {
         List<Location> locations = new LinkedList<>();
         for (int x = row - dist; x <= row + dist; x++) {
-            if (x > 0 && x < thisTick.length - 1) {
+            if (x >= 0 && x < thisTick.length - 1) {
                 for (int y = col - dist; y <= col + dist; y++) {
                     if (y > 0 && y < thisTick[x].length - 1 && thisTick[x][y] == null
                         && !(x == row && y == col)) {
@@ -97,12 +107,12 @@ public abstract class Game implements Runnable {
         }
         thisTick[x][y] = entity;
     }
-    
+
     public boolean spawnEntityAt(int x, int y, int id) {
         if (state != GameState.SPAWN_TICK) {
             throw new IllegalStateException("not in spawn tick");
         }
-        if (nextTick[x][y] == null) {
+        if (isInBounds(x, y) && nextTick[x][y] == null) {
             nextTick[x][y] = new Entity(id);
             return true;
         }
@@ -113,11 +123,15 @@ public abstract class Game implements Runnable {
         if (state != GameState.MOVE_TICK) {
             throw new IllegalStateException("not in move tick");
         }
-        if (nextTick[toX][toY] == null) {
+        if (isInBounds(toX, toY) && nextTick[toX][toY] == null) {
             nextTick[toX][toY] = thisTick[fromX][fromY];
             return true;
         }
         return false;
+    }
+    
+    public boolean isInBounds(int x, int y) {
+        return x >= 0 && y >= 0 && x < thisTick.length && y < thisTick.length;
     }
 
     public EntityType getEntityTypeByID(int id) {
@@ -138,6 +152,14 @@ public abstract class Game implements Runnable {
 
     public GameState getState() {
         return state;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public int getSpeed() {
+        return speed;
     }
 
     @Override

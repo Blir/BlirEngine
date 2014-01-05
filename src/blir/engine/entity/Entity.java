@@ -1,4 +1,4 @@
-package blir.engine.slot;
+package blir.engine.entity;
 
 import blir.engine.game.Game;
 import blir.engine.game.GameState;
@@ -12,8 +12,8 @@ public class Entity {
     public final int id;
     
     private boolean alive = true;
-    
     private int dmg;
+    private int ticksLived;
     
     public Entity(int id) {
         this.id = id;
@@ -43,5 +43,13 @@ public class Entity {
     
     public int getDamage() {
         return dmg;
+    }
+    
+    public void tick() {
+        ticksLived++;
+    }
+    
+    public int getTicksLived() {
+        return ticksLived;
     }
 }

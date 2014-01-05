@@ -1,10 +1,11 @@
-package blir.engine.slot;
+package blir.engine.entity;
 
 import blir.engine.game.Game;
 import blir.engine.util.Location;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -35,16 +36,25 @@ public class EntitySpawner extends EntityType {
 
     @Override
     public void onMoveTick(int x, int y, Game game) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void onSpawnTick(List<Location> entityLocations, Game game) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (entityLocations.size() < cap) {
+            for (Location loc : entityLocations) {
+                Entity entity = game.getEntityAt(loc.x, loc.y);
+                if (entity.getTicksLived() % rate == 0) {
+                    game.spawnEntityAt(loc.x, loc.y, spawnID);
+                }
+            }
+        }
     }
 
     @Override
     public void onCombatTick(int x, int y, Game game) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void init() {
     }
 }
