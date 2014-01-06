@@ -5,7 +5,10 @@ import blir.engine.swing.GameGUI;
 import blir.engine.item.Item;
 import blir.engine.entity.Entity;
 import blir.engine.entity.EntityType;
+import blir.engine.swing.Pixel;
 import blir.engine.util.Location;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -19,6 +22,7 @@ public abstract class Game implements Runnable {
     public static final GameOfLife gameOfLife = new GameOfLife();
     public static final ArchIorZard archiorzard = new ArchIorZard();
     public static final Apocalypse apocalypse = new Apocalypse();
+    public static final ScrollingGame test = new ScrollingGame("test", 0, 15);
 
     public static void log(Level level, String msg, Throwable thrown) {
         BlirEngine.LOGGER.log(level, msg, thrown);
@@ -58,6 +62,8 @@ public abstract class Game implements Runnable {
     public abstract void reset();
     
     public abstract int size();
+    
+    public abstract Pixel[][] getDisplay();
 
     public void registerItemType(Item item) {
         itemTypes.put(item.id, item);
@@ -65,7 +71,7 @@ public abstract class Game implements Runnable {
 
     public void registerEntityType(EntityType type) {
         entityTypes.put(type.id, type);
-        type.init();
+        type.init(this);
         if (type.spawner != null) {
             registerEntityType(type.spawner);
         }
@@ -165,6 +171,7 @@ public abstract class Game implements Runnable {
         if (state != null) {
             throw new IllegalStateException("game currently ticking");
         }
+        getEntityTypeByID(entity.getID()).entityInit(entity);
         thisTick[x][y] = entity;
     }
 
@@ -234,6 +241,10 @@ public abstract class Game implements Runnable {
         return speed;
     }
     
+    public int getTick() {
+        return tick;
+    }
+    
     public void updateScoreboard() {
         gui.setTitle(scoreboard.toString(name));
     }
@@ -251,5 +262,13 @@ public abstract class Game implements Runnable {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+    
+    public void registerKeyListener(KeyListener listener) {
+        gui.addKeyListener(listener);
+    }
+    
+    public void registerMouseListener(MouseListener listener) {
+        gui.addMouseListener(listener);
     }
 }

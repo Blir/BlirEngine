@@ -7,23 +7,42 @@ import blir.engine.swing.Pixel;
 import blir.engine.util.Location;
 
 import java.awt.Color;
-import java.util.*;
+import java.util.HashSet;
 import java.util.logging.Level;
+
+import static blir.engine.entity.EntityType.player;
 
 /**
  *
- * @author Travis
+ * @author Blir
  */
-public abstract class GenericGame extends Game {
+public class ScrollingGame extends Game {
 
-    public GenericGame(String name, int spawnInit, int pixelSize) {
+    public ScrollingGame(String name, int spawnInit, int pixelSize) {
         super(name, spawnInit, pixelSize);
-        thisTick = new Entity[50][50];
+        thisTick = new Entity[50][250];
+        speed = 50;
+    }
+
+    @Override
+    public void init() {
+        gui.disableIO();
+        gui.disableSpawning();
+        gui.disableSpeedChanging();
+        registerEntityType(player);
+        registerEntityType(EntityType.ground);
+        registerEntityType(EntityType.enemy);
+        registerEntityType(EntityType.missile);
+        thisTick[25][25] = new Entity(player.id);
+        player.setPos(25);
+        generateTerrain();
+        gui.setVisible(true);
     }
 
     @Override
     public void reset() {
-        thisTick = new Entity[50][50];
+        thisTick = new Entity[50][250];
+        thisTick[25][25] = new Entity(player.id);
     }
 
     @Override
@@ -35,10 +54,13 @@ public abstract class GenericGame extends Game {
     public Pixel[][] getDisplay() {
         Pixel[][] pixels = new Pixel[50][50];
         for (int row = 0; row < thisTick.length; row++) {
-            for (int col = 0; col < thisTick.length; col++) {
-                pixels[row][col] = thisTick[row][col] == null
-                                   ? new ColorPixel(row, col, PIXEL_SIZE, Color.BLACK)
-                                   : getEntityTypeByID(thisTick[row][col].getID()).getPixel(row, col, PIXEL_SIZE);
+            for (int col = player.getPos() - 25; col < player.getPos() + 25; col++) {
+                //log(Level.FINEST, "col:%d playerPos:%d", col, player.getPos());
+                if (isInBounds(col)) {
+                    pixels[row][col - (player.getPos() - 25)] = thisTick[row][col] == null
+                                       ? new ColorPixel(row, col, PIXEL_SIZE, Color.BLACK)
+                                       : getEntityTypeByID(thisTick[row][col].getID()).getPixel(row, col, PIXEL_SIZE);
+                }
             }
         }
         return pixels;
@@ -61,7 +83,7 @@ public abstract class GenericGame extends Game {
                     }
                 }
 
-                nextTick = new Entity[50][50];
+                nextTick = new Entity[50][250];
 
                 for (int row = 0; row < thisTick.length; row++) {
                     System.arraycopy(thisTick[row], 0, nextTick[row], 0, thisTick[row].length);
@@ -124,6 +146,14 @@ public abstract class GenericGame extends Game {
             }
         } catch (InterruptedException ex) {
             log(Level.SEVERE, "Whoops!", ex);
+        }
+    }
+
+    public void generateTerrain() {
+        for (int row = 26; row < thisTick.length; row++) {
+            for (int col = 0; col < thisTick[row].length; col++) {
+                thisTick[row][col] = new Entity(EntityType.ground.id);
+            }
         }
     }
 }

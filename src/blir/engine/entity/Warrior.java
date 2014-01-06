@@ -18,7 +18,7 @@ public class Warrior extends CombatEntityType {
     }
 
     @Override
-    public void init() {
+    public void init(Game game) {
         damageMap = new HashMap<>();
         damageMap.put(EntityType.archer.id, 3);
         damageMap.put(EntityType.wizard.id, 1);

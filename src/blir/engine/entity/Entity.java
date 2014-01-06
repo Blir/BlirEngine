@@ -3,6 +3,7 @@ package blir.engine.entity;
 import blir.engine.game.Game;
 import blir.engine.game.GameState;
 import blir.engine.item.ItemStack;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +13,7 @@ import java.util.Map;
  * @author Blir
  */
 public class Entity {
-
+    
     private int id;
     private boolean alive = true;
     private int dmg;

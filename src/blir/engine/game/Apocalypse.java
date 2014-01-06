@@ -19,9 +19,11 @@ public class Apocalypse extends GenericGame {
         registerEntityType(EntityType.wall);
         registerEntityType(EntityType.human);
         registerEntityType(EntityType.zombie);
+        registerEntityType(EntityType.juggernaut);
         registerItemType(Item.wall);
         scoreboard.addTeam(EntityType.human);
         scoreboard.addTeam(EntityType.zombie);
+        scoreboard.addTeam(EntityType.juggernaut);
         gui.setVisible(true);
     }
 }

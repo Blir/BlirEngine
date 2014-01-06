@@ -40,7 +40,7 @@ public class Original extends EntityType {
     }
 
     @Override
-    public void init() {
+    public void init(Game game) {
     }
 
     @Override

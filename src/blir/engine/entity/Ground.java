@@ -1,24 +1,24 @@
 package blir.engine.entity;
 
 import blir.engine.game.Game;
-import blir.engine.util.Location;
 import java.awt.Color;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  *
  * @author Blir
  */
-public class Wall extends MortalEntityType {
+public class Ground extends EntityType {
 
-    public Wall(int id) {
-        super(id, "Wall", Color.ORANGE, 150);
+    public Ground(int id) {
+        super(id, "Ground", Color.GREEN);
     }
 
     @Override
     public void init(Game game) {
+    }
+
+    @Override
+    public void entityInit(Entity entity) {
     }
 
     @Override
@@ -30,7 +30,6 @@ public class Wall extends MortalEntityType {
     }
 
     @Override
-    public void entityInit(Entity entity) {
+    public void onCombatTick(int x, int y, Game game) {
     }
-    
 }

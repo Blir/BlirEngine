@@ -17,7 +17,7 @@ public class Wizard extends CombatEntityType {
     }
 
     @Override
-    public void init() {
+    public void init(Game game) {
         damageMap = new HashMap<>();
         damageMap.put(EntityType.archer.id, 1);
         damageMap.put(EntityType.warrior.id, 3);

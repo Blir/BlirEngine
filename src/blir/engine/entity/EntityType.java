@@ -1,6 +1,9 @@
 package blir.engine.entity;
 
 import blir.engine.game.Game;
+import blir.engine.swing.ColorPixel;
+import blir.engine.swing.ImagePixel;
+import blir.engine.swing.Pixel;
 import blir.engine.util.Location;
 
 import java.awt.Color;
@@ -20,6 +23,11 @@ public abstract class EntityType {
     public static final Wizard wizard = new Wizard(6, 7);
     public static final Human human = new Human(8);
     public static final Zombie zombie = new Zombie(9);
+    public static final Juggernaut juggernaut = new Juggernaut(10, 11);
+    public static final PlayerEntity player = new PlayerEntity(12);
+    public static final Ground ground = new Ground(13);
+    public static final Enemy enemy = new Enemy(14);
+    public static final Missile missile = new Missile(15);
 
     public static List<Entity> filterByID(List<Entity> list, int id) {
         List<Entity> filtered = new LinkedList<>();
@@ -86,7 +94,7 @@ public abstract class EntityType {
         this(id, name, null, img, null);
     }
 
-    public abstract void init();
+    public abstract void init(Game game);
     
     public abstract void entityInit(Entity entity);
 
@@ -95,6 +103,10 @@ public abstract class EntityType {
     public abstract void onSpawnTick(Game game);
 
     public abstract void onCombatTick(int x, int y, Game game);
+    
+    public Pixel getPixel(int x, int y, int size) {
+        return color == null ? new ImagePixel(x, y, size, img) : new ColorPixel(x, y, size, color);
+    }
 
     @Override
     public int hashCode() {

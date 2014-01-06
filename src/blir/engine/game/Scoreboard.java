@@ -26,6 +26,6 @@ public class Scoreboard {
             }
             string.append(team.getTeamName()).append(": ").append(team.getScore()).append(", ");
         }
-        return no1 == null ? "" : string.append(no1.getTeamName()).append(" is winning").toString();
+        return no1 == null ? name : string.append(no1.getTeamName()).append(" is winning").toString();
     }
 }

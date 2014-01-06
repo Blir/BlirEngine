@@ -46,8 +46,12 @@ public class EntitySpawner extends EntityType {
             for (Location entity : entityLocations) {
                 if (game.getEntityAt(entity.x, entity.y).getTicksLived() % rate == 0) {
                     Set<Location> emptyLocations = game.getEmptyLocations(entity.x, entity.y, 1);
+                    int spawned = 0;
                     for (Location loc : emptyLocations) {
-                        game.spawnEntityAt(loc.x, loc.y, toSpawn);
+                        if (spawned + existing.size() < cap) {
+                            spawned++;
+                            game.spawnEntityAt(loc.x, loc.y, toSpawn);
+                        }
                     }
                 }
             }
@@ -59,7 +63,7 @@ public class EntitySpawner extends EntityType {
     }
 
     @Override
-    public void init() {
+    public void init(Game game) {
     }
 
     @Override
