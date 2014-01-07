@@ -10,6 +10,7 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 
 /**
  *
@@ -39,7 +40,7 @@ public class BlirEngine {
         registerGame(Game.apocalypse);
         registerGame(Game.test);
 
-        new SelectorGUI<Game>(games.values()) {
+        new SelectorGUI<Game>(games.values(), JFrame.EXIT_ON_CLOSE) {
 
             @Override
             public void onSelectionMade(Game selection) {

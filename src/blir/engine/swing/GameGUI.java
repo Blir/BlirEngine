@@ -234,7 +234,7 @@ public class GameGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_onSpeedChange
 
     private void onSpawnChange(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onSpawnChange
-        new SelectorGUI<EntityType>(game.getEntityTypes()) {
+        new SelectorGUI<EntityType>(game.getEntityTypes(), DISPOSE_ON_CLOSE) {
             @Override
             public void onSelectionMade(EntityType selection) {
                 spawnID = selection.id;

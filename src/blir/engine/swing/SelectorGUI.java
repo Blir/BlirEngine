@@ -10,8 +10,10 @@ import java.util.Collection;
 public abstract class SelectorGUI<E> extends javax.swing.JFrame {
 
     private final javax.swing.DefaultListModel<E> model = new javax.swing.DefaultListModel<>();
+    private final int DEFAULT_CLOSE_OPERATION;
 
-    public SelectorGUI(Collection<E> values) {
+    public SelectorGUI(Collection<E> values, int defaultCloseOperation) {
+        this.DEFAULT_CLOSE_OPERATION = defaultCloseOperation;
         initComponents();
         for (E value : values) {
             model.addElement(value);
@@ -19,14 +21,15 @@ public abstract class SelectorGUI<E> extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }
 
-    public SelectorGUI(E[] values) {
+    public SelectorGUI(E[] values, int defaultCloseOperation) {
+        this.DEFAULT_CLOSE_OPERATION = defaultCloseOperation;
         initComponents();
         for (E value : values) {
             model.addElement(value);
         }
         setLocationRelativeTo(null);
     }
-    
+
     public abstract void onSelectionMade(E selection);
 
     /**
@@ -42,7 +45,7 @@ public abstract class SelectorGUI<E> extends javax.swing.JFrame {
         jList1 = new javax.swing.JList<E>();
         jButton1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(this.DEFAULT_CLOSE_OPERATION);
         setTitle("Selector");
 
         jList1.setModel(this.model);
