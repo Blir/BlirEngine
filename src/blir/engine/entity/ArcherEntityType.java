@@ -34,9 +34,4 @@ public class ArcherEntityType extends EntityType implements Team {
     public int getScore() {
         return damageDealt;
     }
-
-    @Override
-    public String getTeamName() {
-        return name;
-    }
 }

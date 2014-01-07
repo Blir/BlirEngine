@@ -33,8 +33,11 @@ public class Human extends MortalEntity {
     public void onCombatTick(int x, int y, Game game) {
         List<Entity> zombies = filterByID(game.getSquareNeighbors(x, y, 1), zombie.id);
         for (Entity entity : zombies) {
-            ((MortalEntity) entity).damage(3);
-            human.damageDealt += 3;
+            if (((MortalEntity) entity).damage(3)) {
+                human.damageDealt += 3;
+                human.kills++;
+                zombie.deaths++;
+            }
         }
     }
 

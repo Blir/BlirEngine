@@ -12,6 +12,8 @@ import java.awt.Color;
 public class JuggernautEntityType extends EntityType implements Team {
 
     int damageDealt;
+    int deaths;
+    int kills;
     
     public JuggernautEntityType(int id, int spawnID) {
         super(id, "Juggernaut", Color.RED, new EntitySpawner(spawnID, "Juggernaut Spawner", Color.PINK, 25, 2, id));
@@ -27,12 +29,7 @@ public class JuggernautEntityType extends EntityType implements Team {
 
     @Override
     public int getScore() {
-        return damageDealt;
-    }
-
-    @Override
-    public String getTeamName() {
-        return name;
+        return damageDealt + 5 * kills - 10 * deaths;
     }
     
     @Override

@@ -8,7 +8,6 @@ import blir.engine.util.Location;
 
 import java.awt.Color;
 import java.util.*;
-import java.util.logging.Level;
 
 /**
  *
@@ -17,6 +16,8 @@ import java.util.logging.Level;
 public class HumanEntityType extends EntityType implements Team {
 
     int damageDealt;
+    int deaths;
+    int kills;
 
     public HumanEntityType(int id, int spawnID) {
         super(id, "Human", Color.BLUE, new EntitySpawner(spawnID, "Human Spawner", Color.CYAN, 50, 4, id));
@@ -36,10 +37,10 @@ public class HumanEntityType extends EntityType implements Team {
             if (walls.getAmount() > 0) {
                 Location loc = game.getFirstSquareNeighborLocation(entity.x, entity.y, 3, zombie.id);
                 if (loc != null) {
-                    //Game.log(Level.FINER, "placing wall");
                     Location wallLoc = Location.towards(entity, loc, 1);
-                    game.spawnEntity(wallLoc, wall.spawn());
-                    walls.changeAmountBy(-1);
+                    if (game.spawnEntity(wallLoc, wall.spawn())) {
+                        walls.changeAmountBy(-1);
+                    }
                 }
             }
             emptyLocations.addAll(game.getEmptyLocations(entity.x, entity.y, 1));
@@ -57,17 +58,12 @@ public class HumanEntityType extends EntityType implements Team {
     @Override
     public Entity spawn() {
         Human entity = new Human();
-        entity.addItemStack(Item.wall);
+        entity.addItemStack(Item.wall, 2);
         return entity;
     }
 
     @Override
     public int getScore() {
-        return damageDealt;
-    }
-
-    @Override
-    public String getTeamName() {
-        return name;
+        return damageDealt + 15 * kills - 5 * deaths;
     }
 }

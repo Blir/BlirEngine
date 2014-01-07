@@ -1,30 +1,22 @@
 package blir.engine.game;
 
-
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  *
  * @author Blir
  */
-public class Scoreboard {
-
-    List<Team> teams = new LinkedList<>();
-
-    public void addTeam(Team team) {
-        teams.add(team);
-    }
+public class Scoreboard extends LinkedList<Alliance> {
 
     public String toString(String name) {
         StringBuilder string = new StringBuilder(name).append(" ");
-        Team no1 = null;
-        for (Team team : teams) {
-            if (no1 == null || no1.getScore() < team.getScore()) {
-                no1 = team;
+        Alliance no1 = null;
+        for (Alliance alliance : this) {
+            if (no1 == null || no1.getScore() < alliance.getScore()) {
+                no1 = alliance;
             }
-            string.append(team.getTeamName()).append(": ").append(team.getScore()).append(", ");
+            string.append(alliance.name).append(": ").append(alliance.getScore()).append(", ");
         }
-        return no1 == null ? name : string.append(no1.getTeamName()).append(" is winning").toString();
+        return no1 == null ? name : string.append(no1.name).append(no1.name.endsWith("s") ? " are" : " is").append(" winning").toString();
     }
 }

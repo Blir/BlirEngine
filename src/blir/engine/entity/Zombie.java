@@ -32,13 +32,20 @@ public class Zombie extends MortalEntity {
         for (Entity entity : neighbors) {
             if (entity.id == human.id) {
                 MortalEntity mortal = ((MortalEntity) entity);
-                mortal.damage(4);
-                zombie.damageDealt += 4;
-                zombie.toSpawn.add(new Location(entity.x, entity.y));
+                if (mortal.damage(4)) {
+                    zombie.damageDealt += 4;
+                    zombie.kills++;
+                    human.deaths++;
+                    zombie.toSpawn.add(new Location(entity.x, entity.y));
+                }
             } else if (entity.id == wall.id) {
                 ((MortalEntity) entity).damage(2);
             } else if (entity.id == juggernaut.id) {
-                ((MortalEntity) entity).damage(3);
+                if (((MortalEntity) entity).damage(3)) {
+                    zombie.damageDealt += 3;
+                    zombie.kills++;
+                    juggernaut.deaths++;
+                }
             }
         }
     }

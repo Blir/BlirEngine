@@ -16,6 +16,8 @@ public class ZombieEntityType extends EntityType implements Team {
 
     Set<Location> toSpawn = new HashSet<>();
     int damageDealt;
+    int deaths;
+    int kills;
 
     public ZombieEntityType(int id, int spawnID) {
         super(id, "Zombie", Color.GREEN, new EntitySpawner(spawnID, "Zombie Spawner", Color.YELLOW, 50, 5, id));
@@ -43,11 +45,6 @@ public class ZombieEntityType extends EntityType implements Team {
 
     @Override
     public int getScore() {
-        return damageDealt;
-    }
-
-    @Override
-    public String getTeamName() {
-        return name;
+        return damageDealt + 15 * kills - 5 * deaths;
     }
 }

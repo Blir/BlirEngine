@@ -37,8 +37,11 @@ public class Juggernaut extends MortalEntity {
         List<Entity> neighbors = game.getSquareNeighbors(x, y, 1);
         for (Entity entity : neighbors) {
             if (entity.id == zombie.id) {
-                ((MortalEntity) entity).damage(22);
-                juggernaut.damageDealt += 22;
+                if (((MortalEntity) entity).damage(22)) {
+                    juggernaut.damageDealt += 22;
+                    juggernaut.kills++;
+                    zombie.deaths++;
+                }
             } else if (entity.id == wall.id) {
                 ((MortalEntity) entity).damage(22);
             }

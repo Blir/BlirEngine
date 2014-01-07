@@ -8,6 +8,10 @@ import blir.engine.entity.EntityType;
  */
 public class ArchIorZard extends GenericGame {
 
+    public final Alliance archers = new Alliance("Archers");
+    public final Alliance warriors = new Alliance("Warriors");
+    public final Alliance wizards = new Alliance("Wizards");
+
     public ArchIorZard() {
         super("ArchIorZard", EntityType.wall.id, 15);
         speed = 150;
@@ -19,9 +23,12 @@ public class ArchIorZard extends GenericGame {
         registerEntityType(EntityType.archer);
         registerEntityType(EntityType.warrior);
         registerEntityType(EntityType.wizard);
-        scoreboard.addTeam(EntityType.archer);
-        scoreboard.addTeam(EntityType.warrior);
-        scoreboard.addTeam(EntityType.wizard);
+        archers.add(EntityType.archer);
+        warriors.add(EntityType.warrior);
+        wizards.add(EntityType.wizard);
+        scoreboard.add(archers);
+        scoreboard.add(warriors);
+        scoreboard.add(wizards);
         gui.setVisible(true);
     }
 }

@@ -7,6 +7,4 @@ package blir.engine.game;
 public interface Team {
 
     public int getScore();
-    
-    public String getTeamName();
 }

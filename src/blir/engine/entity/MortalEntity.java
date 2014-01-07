@@ -22,8 +22,10 @@ public abstract class MortalEntity extends Entity {
         this.dmg = dmg;
     }
 
-    public void damage(int amount) {
+    public boolean damage(int amount) {
+        int temp = dmg;
         this.dmg += amount;
+        return temp < maxHP && !isAlive();
     }
 
     public void heal(int amount) {

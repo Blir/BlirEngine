@@ -9,6 +9,9 @@ import blir.engine.item.Item;
  */
 public class Apocalypse extends GenericGame {
 
+    public final Alliance humans = new Alliance("Humans");
+    public final Alliance zombies = new Alliance("Zombies");
+
     public Apocalypse() {
         super("Apocalypse", EntityType.wall.id, 15);
         speed = 150;
@@ -21,9 +24,11 @@ public class Apocalypse extends GenericGame {
         registerEntityType(EntityType.zombie);
         registerEntityType(EntityType.juggernaut);
         registerItemType(Item.wall);
-        scoreboard.addTeam(EntityType.human);
-        scoreboard.addTeam(EntityType.zombie);
-        scoreboard.addTeam(EntityType.juggernaut);
+        humans.add(EntityType.human);
+        humans.add(EntityType.juggernaut);
+        zombies.add(EntityType.zombie);
+        scoreboard.add(humans);
+        scoreboard.add(zombies);
         gui.setVisible(true);
     }
 }
