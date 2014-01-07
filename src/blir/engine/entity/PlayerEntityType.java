@@ -10,26 +10,17 @@ import java.awt.event.KeyListener;
  *
  * @author Blir
  */
-public class PlayerEntity extends MortalEntityType implements KeyListener {
+public class PlayerEntityType extends EntityType implements KeyListener {
 
     int pos;
     
-    public PlayerEntity(int id) {
-        super(id, "Player", Color.YELLOW, 100);
+    public PlayerEntityType(int id) {
+        super(id, "Player", Color.YELLOW);
     }
 
     @Override
     public void init(Game game) {
         game.registerKeyListener(this);
-    }
-
-    @Override
-    public void entityInit(Entity entity) {
-    }
-
-    @Override
-    public void onMoveTick(int x, int y, Game game) {
-        pos = x;
     }
 
     @Override

@@ -3,37 +3,36 @@ package blir.engine.entity;
 import blir.engine.game.Game;
 import blir.engine.util.Location;
 
-import java.awt.Color;
-import java.util.HashMap;
+import java.util.List;
+
+import static blir.engine.entity.EntityType.wizard;
 
 /**
  *
  * @author Blir
  */
-public class Wizard extends CombatEntityType {
+public class Wizard extends MortalEntity {
 
-    public Wizard(int id, int spawnerID) {
-        super(id, "Wizard", Color.BLUE, new EntitySpawner(spawnerID, "Wizard Spawner", Color.CYAN, 25, 10, id), 20);
-    }
-
-    @Override
-    public void init(Game game) {
-        damageMap = new HashMap<>();
-        damageMap.put(EntityType.archer.id, 1);
-        damageMap.put(EntityType.warrior.id, 3);
+    public Wizard() {
+        super(wizard.id, 20);
     }
 
     @Override
     public void onMoveTick(int x, int y, Game game) {
-        Location loc = Location.wander(x, y, 1);
-        game.moveEntity(x, y, loc.x, loc.y);
+        game.moveEntity(x, y, Location.wander(x, y, 1));
     }
 
     @Override
-    public void onSpawnTick(Game game) {
-    }
-
-    @Override
-    public void entityInit(Entity entity) {
+    public void onCombatTick(int x, int y, Game game) {
+        List<Entity> neighbors = game.getSquareNeighbors(x, y, 1);
+        for (Entity neighbor : neighbors) {
+            if (neighbor.id == EntityType.archer.id) {
+                ((MortalEntity) neighbor).damage(1);
+                wizard.damageDealt++;
+            } else if (neighbor.id == EntityType.warrior.id) {
+                ((MortalEntity) neighbor).damage(3);
+                wizard.damageDealt += 3;
+            }
+        }
     }
 }

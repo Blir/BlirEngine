@@ -2,16 +2,14 @@ package blir.engine.entity;
 
 import blir.engine.game.Game;
 
-import static blir.engine.entity.EntityType.wall;
-
 /**
  *
  * @author Blir
  */
-public class Wall extends MortalEntity {
+public class GenericEntity extends Entity {
 
-    public Wall() {
-        super(wall.id, 150);
+    public GenericEntity(int id) {
+        super(id);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package blir.engine.entity;
+package blir.engine.game;
 
 /**
  *

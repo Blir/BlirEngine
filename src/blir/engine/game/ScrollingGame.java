@@ -30,10 +30,10 @@ public class ScrollingGame extends Game {
         gui.disableSpawning();
         gui.disableSpeedChanging();
         registerEntityType(player);
-        registerEntityType(EntityType.ground);
+        //registerEntityType(EntityType.ground);
         registerEntityType(EntityType.enemy);
         registerEntityType(EntityType.missile);
-        thisTick[25][25] = new Entity(player.id);
+        //thisTick[25][25] = new Entity(player.id);
         player.setPos(25);
         generateTerrain();
         gui.setVisible(true);
@@ -42,7 +42,7 @@ public class ScrollingGame extends Game {
     @Override
     public void reset() {
         thisTick = new Entity[50][250];
-        thisTick[25][25] = new Entity(player.id);
+        //thisTick[25][25] = new Entity(player.id);
     }
 
     @Override
@@ -58,8 +58,8 @@ public class ScrollingGame extends Game {
                 //log(Level.FINEST, "col:%d playerPos:%d", col, player.getPos());
                 if (isInBounds(col)) {
                     pixels[row][col - (player.getPos() - 25)] = thisTick[row][col] == null
-                                       ? new ColorPixel(row, col, PIXEL_SIZE, Color.BLACK)
-                                       : getEntityTypeByID(thisTick[row][col].getID()).getPixel(row, col, PIXEL_SIZE);
+                                                                ? new ColorPixel(row, col, PIXEL_SIZE, Color.BLACK)
+                                                                : getEntityType(thisTick[row][col].id).getPixel(row, col, PIXEL_SIZE);
                 }
             }
         }
@@ -78,7 +78,7 @@ public class ScrollingGame extends Game {
                 for (int row = 0; row < thisTick.length; row++) {
                     for (int col = 0; col < thisTick[row].length; col++) {
                         if (thisTick[row][col] != null) {
-                            entityLocations.get(getEntityTypeByID(thisTick[row][col].getID())).add(new Location(row, col));
+                            entityLocations.get(getEntityType(thisTick[row][col].id)).add(new Location(row, col));
                         }
                     }
                 }
@@ -94,8 +94,8 @@ public class ScrollingGame extends Game {
                 for (int row = 0; row < thisTick.length; row++) {
                     for (int col = 0; col < thisTick[row].length; col++) {
                         if (thisTick[row][col] != null) {
-                            EntityType type = entityTypes.get(thisTick[row][col].getID());
-                            type.onMoveTick(row, col, this);
+                            EntityType type = entityTypes.get(thisTick[row][col].id);
+                            //type.onMoveTick(row, col, this);
                         }
                     }
                 }
@@ -119,8 +119,8 @@ public class ScrollingGame extends Game {
                 for (int row = 0; row < thisTick.length; row++) {
                     for (int col = 0; col < thisTick[row].length; col++) {
                         if (thisTick[row][col] != null) {
-                            entityTypes.get(thisTick[row][col].getID())
-                                    .onCombatTick(row, col, this);
+                            //entityTypes.get(thisTick[row][col].getID())
+                            //.onCombatTick(row, col, this);
                         }
                     }
                 }
@@ -152,7 +152,7 @@ public class ScrollingGame extends Game {
     public void generateTerrain() {
         for (int row = 26; row < thisTick.length; row++) {
             for (int col = 0; col < thisTick[row].length; col++) {
-                thisTick[row][col] = new Entity(EntityType.ground.id);
+                //thisTick[row][col] = new Entity(EntityType.ground.id);
             }
         }
     }

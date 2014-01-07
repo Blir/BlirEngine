@@ -38,7 +38,7 @@ public abstract class GenericGame extends Game {
             for (int col = 0; col < thisTick.length; col++) {
                 pixels[row][col] = thisTick[row][col] == null
                                    ? new ColorPixel(row, col, PIXEL_SIZE, Color.BLACK)
-                                   : getEntityTypeByID(thisTick[row][col].getID()).getPixel(row, col, PIXEL_SIZE);
+                                   : getEntityType(thisTick[row][col].id).getPixel(row, col, PIXEL_SIZE);
             }
         }
         return pixels;
@@ -56,7 +56,7 @@ public abstract class GenericGame extends Game {
                 for (int row = 0; row < thisTick.length; row++) {
                     for (int col = 0; col < thisTick[row].length; col++) {
                         if (thisTick[row][col] != null) {
-                            entityLocations.get(getEntityTypeByID(thisTick[row][col].getID())).add(new Location(row, col));
+                            entityLocations.get(getEntityType(thisTick[row][col].id)).add(new Location(row, col));
                         }
                     }
                 }
@@ -72,8 +72,7 @@ public abstract class GenericGame extends Game {
                 for (int row = 0; row < thisTick.length; row++) {
                     for (int col = 0; col < thisTick[row].length; col++) {
                         if (thisTick[row][col] != null) {
-                            EntityType type = entityTypes.get(thisTick[row][col].getID());
-                            type.onMoveTick(row, col, this);
+                            thisTick[row][col].onMoveTick(row, col, this);
                         }
                     }
                 }
@@ -97,8 +96,7 @@ public abstract class GenericGame extends Game {
                 for (int row = 0; row < thisTick.length; row++) {
                     for (int col = 0; col < thisTick[row].length; col++) {
                         if (thisTick[row][col] != null) {
-                            entityTypes.get(thisTick[row][col].getID())
-                                    .onCombatTick(row, col, this);
+                            thisTick[row][col].onCombatTick(row, col, this);
                         }
                     }
                 }
@@ -107,7 +105,11 @@ public abstract class GenericGame extends Game {
 
                 for (int row = 0; row < thisTick.length; row++) {
                     for (int col = 0; col < thisTick[row].length; col++) {
-                        if (thisTick[row][col] != null && !thisTick[row][col].isAlive()) {
+                        if (thisTick[row][col] != null
+                            && (!thisTick[row][col].isAlive()
+                                || (thisTick[row][col].getX() != row
+                                    || thisTick[row][col].getY() != col))) {
+
                             nextTick[row][col] = null;
                         }
                         if (nextTick[row][col] != null) {

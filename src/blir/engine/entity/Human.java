@@ -5,77 +5,76 @@ import blir.engine.item.Item;
 import blir.engine.item.ItemStack;
 import blir.engine.util.Location;
 
-import java.awt.Color;
 import java.util.*;
+
+import static blir.engine.entity.EntityType.*;
 
 /**
  *
  * @author Blir
  */
-public class Human extends CombatEntityType {
+public class Human extends MortalEntity {
 
-    public Human(int id) {
-        super(id, "Human", Color.BLUE, 20);
-    }
+    Map<Integer, ItemStack> inventory = new HashMap<>();
 
-    @Override
-    public void init(Game game) {
-        damageMap = new HashMap<>();
-        damageMap.put(zombie.id, 3);
+    public Human() {
+        super(human.id, 20);
     }
 
     @Override
     public void onMoveTick(int x, int y, Game game) {
         if (filterByID(game.getSquareNeighbors(x, y, 1), juggernaut.id).isEmpty()) {
-            Location loc = game.getFirstSquareNeighborLocationByID(x, y, 2, zombie.id);
-            if (loc == null) {
-                loc = Location.wander(x, y, 1);
-            } else {
-                loc = Location.away(x, y, loc.x, loc.y, 2);
-            }
-            game.moveEntity(x, y, loc.x, loc.y);
+            Location loc = game.getFirstSquareNeighborLocation(x, y, 2, zombie.id);
+            game.moveEntity(x, y, loc == null ? Location.wander(x, y, 1) : Location.away(x, y, loc, 2));
         }
     }
 
     @Override
-    public void onSpawnTick(Game game) {
-        Set<Location> entityLocations = game.getEntityLocations(this);
-        Set<Location> emptyLocations = new HashSet<>();
-
-        for (Location entity : entityLocations) {
-            ItemStack walls = game.getEntityAt(entity.x, entity.y).getItemStackByID(Item.wall.id);
-            if (walls.getAmount() > 0) {
-                Location loc = game.getFirstSquareNeighborLocationByID(entity.x, entity.y, 1, zombie.id);
-                if (loc != null) {
-                    Location wallLoc = Location.towards(entity, loc, 1);
-                    game.spawnEntityAt(wallLoc.x, wallLoc.y, wall);
-                    walls.changeAmountBy(-1);
-                    break;
-                }
-            }
-            emptyLocations.addAll(game.getEmptyLocations(entity.x, entity.y, 1));
-        }
-
-        for (Location empty : emptyLocations) {
-            if (filterByID(game.getNeighorSlice(empty.x, empty.y, 1), id).size() == 2
-                && game.getNeighorSlice(empty.x, empty.y, 2).isEmpty()) {
-
-                Map<Entity, Location> mates = filterByID(game.getSquareNeighborLocations(empty.x, empty.y, 1), id);
-                for (Map.Entry<Entity, Location> entry : mates.entrySet()) {
-                    ItemStack is = entry.getKey().getItemStackByID(Item.fertility.id);
-                    if (is.getAmount() > 0) {
-                        is.changeAmountBy(-1);
-                        game.spawnEntityAt(empty.x, empty.y, this);
-                        break;
-                    }
-                }
-            }
+    public void onCombatTick(int x, int y, Game game) {
+        List<Entity> zombies = filterByID(game.getSquareNeighbors(x, y, 1), zombie.id);
+        for (Entity entity : zombies) {
+            ((MortalEntity) entity).damage(3);
+            human.damageDealt += 3;
         }
     }
 
-    @Override
-    public void entityInit(Entity entity) {
-        entity.addItemStack(new ItemStack(Item.wall.id));
-        entity.addItemStack(new ItemStack(Item.fertility.id, 2));
+    public ItemStack getItemStack(Item item) {
+        return inventory.get(item.id);
+    }
+
+    public ItemStack getItemStack(int id) {
+        return inventory.get(id);
+    }
+
+    public Collection<ItemStack> getInventory() {
+        return inventory.values();
+    }
+
+    public ItemStack removeItemStack(Item item) {
+        return inventory.remove(item.id);
+    }
+
+    public ItemStack removeItemStack(int id) {
+        return inventory.remove(id);
+    }
+
+    public ItemStack addItemStack(Item item) {
+        return inventory.put(item.id, new ItemStack(item));
+    }
+
+    public ItemStack addItemStack(int id) {
+        return inventory.put(id, new ItemStack(id));
+    }
+
+    public ItemStack addItemStack(Item item, int amount) {
+        return inventory.put(item.id, new ItemStack(item, amount));
+    }
+
+    public ItemStack addItemStack(int id, int amount) {
+        return inventory.put(id, new ItemStack(id, amount));
+    }
+
+    public ItemStack addItemStack(ItemStack is) {
+        return inventory.put(is.id, is);
     }
 }

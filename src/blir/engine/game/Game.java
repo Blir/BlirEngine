@@ -60,9 +60,9 @@ public abstract class Game implements Runnable {
     public abstract void init();
 
     public abstract void reset();
-    
+
     public abstract int size();
-    
+
     public abstract Pixel[][] getDisplay();
 
     public void registerItemType(Item item) {
@@ -131,13 +131,14 @@ public abstract class Game implements Runnable {
         }
         return neighborLocations;
     }
-    
-    public Location getFirstSquareNeighborLocationByID(int row, int col, int dist, int id) {
+
+    public Location getFirstSquareNeighborLocation(int row, int col, int dist,
+                                                   int id) {
         for (int x = row - dist; x <= row + dist; x++) {
             if (isInBounds(x)) {
                 for (int y = col - dist; y <= col + dist; y++) {
                     if (isInBounds(y) && thisTick[x][y] != null
-                        && !(x == row && y == col) && thisTick[x][y].getID() == id) {
+                        && !(x == row && y == col) && thisTick[x][y].id == id) {
 
                         return new Location(x, y);
                     }
@@ -163,29 +164,56 @@ public abstract class Game implements Runnable {
         return locations;
     }
 
-    public Entity getEntityAt(int x, int y) {
+    public Entity getEntity(Location loc) {
+        return getEntity(loc.x, loc.y);
+    }
+
+    public Entity getEntity(int x, int y) {
         return thisTick[x][y];
     }
 
-    public void placeEntityAt(int x, int y, Entity entity) {
+    public void removeEntity(int x, int y) {
         if (state != null) {
             throw new IllegalStateException("game currently ticking");
         }
-        getEntityTypeByID(entity.getID()).entityInit(entity);
+        thisTick[x][y] = null;
+    }
+
+    public void placeEntity(int x, int y, int id) {
+        if (state != null) {
+            throw new IllegalStateException("game currently ticking");
+        }
+        Entity entity = getEntityType(id).spawn();
+        entity.setLocation(x, y);
         thisTick[x][y] = entity;
     }
 
-    public boolean spawnEntityAt(int x, int y, EntityType type) {
+    public boolean spawnEntity(Location loc, Entity entity) {
+        return spawnEntity(loc.x, loc.y, entity);
+    }
+
+    public boolean spawnEntity(int x, int y, Entity entity) {
         if (state != GameState.SPAWN_TICK) {
             throw new IllegalStateException("not in spawn tick");
         }
         if (isInBounds(x, y) && nextTick[x][y] == null) {
-            Entity entity = new Entity(type.id);
-            type.entityInit(entity);
             nextTick[x][y] = entity;
+            entity.setLocation(x, y);
             return true;
         }
         return false;
+    }
+
+    public boolean moveEntity(int fromX, int fromY, Location to) {
+        return moveEntity(fromX, fromY, to.x, to.y);
+    }
+
+    public boolean moveEntity(Location from, int toX, int toY) {
+        return moveEntity(from.x, from.y, toX, toY);
+    }
+
+    public boolean moveEntity(Location from, Location to) {
+        return moveEntity(from.x, from.y, to.x, to.y);
     }
 
     public boolean moveEntity(int fromX, int fromY, int toX, int toY) {
@@ -194,12 +222,12 @@ public abstract class Game implements Runnable {
         }
         if (isInBounds(toX, toY) && nextTick[toX][toY] == null) {
             nextTick[toX][toY] = thisTick[fromX][fromY];
-            thisTick[fromX][fromY].setAlive(false);
+            thisTick[fromX][fromY].setLocation(toX, toY);
             return true;
         }
         return false;
     }
-    
+
     public Set<Location> getEntityLocations(EntityType type) {
         return entityLocations.get(type);
     }
@@ -213,11 +241,11 @@ public abstract class Game implements Runnable {
         return true;
     }
 
-    public EntityType getEntityTypeByID(int id) {
+    public EntityType getEntityType(int id) {
         return entityTypes.get(id);
     }
 
-    public Item getItemForID(int id) {
+    public Item getItem(int id) {
         return itemTypes.get(id);
     }
 
@@ -240,11 +268,11 @@ public abstract class Game implements Runnable {
     public int getSpeed() {
         return speed;
     }
-    
+
     public int getTick() {
         return tick;
     }
-    
+
     public void updateScoreboard() {
         gui.setTitle(scoreboard.toString(name));
     }
@@ -263,11 +291,11 @@ public abstract class Game implements Runnable {
     public int hashCode() {
         return name.hashCode();
     }
-    
+
     public void registerKeyListener(KeyListener listener) {
         gui.addKeyListener(listener);
     }
-    
+
     public void registerMouseListener(MouseListener listener) {
         gui.addMouseListener(listener);
     }

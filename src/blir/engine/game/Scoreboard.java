@@ -1,6 +1,5 @@
 package blir.engine.game;
 
-import blir.engine.entity.Team;
 
 import java.util.LinkedList;
 import java.util.List;

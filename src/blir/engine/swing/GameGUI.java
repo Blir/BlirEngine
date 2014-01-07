@@ -172,13 +172,12 @@ public class GameGUI extends javax.swing.JFrame {
         if (spawnMenuItem.isEnabled()) {
             int newX = (int) Math.round(evt.getX() / (double) game.PIXEL_SIZE - 1);
             int newY = (int) Math.round(evt.getY() / (double) game.PIXEL_SIZE - 4);
-            if (game.isInBounds(newX, newY)) {
-                Entity entity = new Entity(spawnID);
-                game.getEntityTypeByID(spawnID).entityInit(entity);
-                game.placeEntityAt(newY, newX,
-                                   game.getEntityAt(newY, newX) == null
-                                   ? entity
-                                   : null);
+            if (game.isInBounds(newY, newX)) {
+                if (erase) {
+                    game.removeEntity(newY, newX);
+                } else {
+                    game.placeEntity(newY, newX, spawnID);
+                }
             }
             repaint();
         }
@@ -189,8 +188,8 @@ public class GameGUI extends javax.swing.JFrame {
             int newX = (int) Math.round(evt.getX() / (double) game.PIXEL_SIZE - 1);
             int newY = (int) Math.round(evt.getY() / (double) game.PIXEL_SIZE - 4);
 
-            if (!game.isInBounds(newX, newY) || (newX == placeX && newY == placeY)
-                || (game.getEntityAt(newY, newX) == null == erase)) {
+            if (!game.isInBounds(newY, newX) || (newX == placeX && newY == placeY)
+                || (game.getEntity(newY, newX) == null == erase)) {
 
                 return;
             }
@@ -198,9 +197,11 @@ public class GameGUI extends javax.swing.JFrame {
             placeX = newX;
             placeY = newY;
 
-            Entity entity = new Entity(spawnID);
-            game.getEntityTypeByID(spawnID).entityInit(entity);
-            game.placeEntityAt(newY, newX, game.getEntityAt(newY, newX) == null ? entity : null);
+            if (erase) {
+                game.removeEntity(newY, newX);
+            } else {
+                game.placeEntity(newY, newX, spawnID);
+            }
             repaint();
         }
     }//GEN-LAST:event_onMouseDragged
@@ -209,17 +210,19 @@ public class GameGUI extends javax.swing.JFrame {
         if (spawnMenuItem.isEnabled()) {
             int newX = (int) Math.round(evt.getX() / (double) game.PIXEL_SIZE - 1);
             int newY = (int) Math.round(evt.getY() / (double) game.PIXEL_SIZE - 4);
-            if (game.isInBounds(newX, newY)) {
-                erase = game.getEntityAt(newY, newX) != null;
+            if (game.isInBounds(newY, newX)) {
+                erase = game.getEntity(newY, newX) != null;
             }
             repaint();
         }
     }//GEN-LAST:event_onMousePressed
 
     private void onClear(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onClear
-        toggler.setState(false);
-        game.reset();
-        repaint();
+        if (spawnMenuItem.isEnabled()) {
+            toggler.setState(false);
+            game.reset();
+            repaint();
+        }
     }//GEN-LAST:event_onClear
 
     private void onSpeedChange(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onSpeedChange
@@ -243,16 +246,16 @@ public class GameGUI extends javax.swing.JFrame {
 
     private void onSave(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onSave
         toggler.setState(false);
-        chooser.showSaveDialog(rootPane);
+        chooser.showSaveDialog(this);
         if (chooser.getSelectedFile() != null) {
             try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(chooser.getSelectedFile()))) {
                 for (int row = 0; row < game.size(); row++) {
                     for (int col = 0; col < game.size(); col++) {
-                        Entity entity = game.getEntityAt(row, col);
+                        Entity entity = game.getEntity(row, col);
                         if (entity != null) {
                             dos.writeInt(row);
                             dos.writeInt(col);
-                            dos.writeInt(entity.getID());
+                            dos.writeInt(entity.id);
                         }
                     }
                 }
@@ -266,12 +269,12 @@ public class GameGUI extends javax.swing.JFrame {
 
     private void onLoad(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onLoad
         toggler.setState(false);
-        chooser.showOpenDialog(rootPane);
+        chooser.showOpenDialog(this);
         if (chooser.getSelectedFile() != null) {
             try (DataInputStream dis = new DataInputStream(new FileInputStream(chooser.getSelectedFile()))) {
                 game.reset();
                 for (;;) {
-                    game.placeEntityAt(dis.readInt(), dis.readInt(), new Entity(dis.readInt()));
+                    game.placeEntity(dis.readInt(), dis.readInt(), dis.readInt());
                 }
             } catch (FileNotFoundException ex) {
                 Game.log(Level.WARNING, "File not found");

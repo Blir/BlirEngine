@@ -34,23 +34,19 @@ public class EntitySpawner extends EntityType {
     }
 
     @Override
-    public void onMoveTick(int x, int y, Game game) {
-    }
-
-    @Override
     public void onSpawnTick(Game game) {
-        EntityType toSpawn = game.getEntityTypeByID(spawnID);
+        EntityType toSpawn = game.getEntityType(spawnID);
         Set<Location> existing = game.getEntityLocations(toSpawn);
         if (existing != null && existing.size() < cap) {
             Set<Location> entityLocations = game.getEntityLocations(this);
             for (Location entity : entityLocations) {
-                if (game.getEntityAt(entity.x, entity.y).getTicksLived() % rate == 0) {
+                if (game.getEntity(entity.x, entity.y).getTicksLived() % rate == 0) {
                     Set<Location> emptyLocations = game.getEmptyLocations(entity.x, entity.y, 1);
                     int spawned = 0;
                     for (Location loc : emptyLocations) {
                         if (spawned + existing.size() < cap) {
                             spawned++;
-                            game.spawnEntityAt(loc.x, loc.y, toSpawn);
+                            game.spawnEntity(loc.x, loc.y, toSpawn.spawn());
                         }
                     }
                 }
@@ -59,14 +55,6 @@ public class EntitySpawner extends EntityType {
     }
 
     @Override
-    public void onCombatTick(int x, int y, Game game) {
-    }
-
-    @Override
     public void init(Game game) {
-    }
-
-    @Override
-    public void entityInit(Entity entity) {
     }
 }
