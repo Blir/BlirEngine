@@ -8,8 +8,11 @@ import java.util.LinkedList;
  */
 public class Scoreboard extends LinkedList<Alliance> {
 
-    public String toString(String name) {
-        StringBuilder string = new StringBuilder(name).append(" ");
+    public String toString(String name, int tick) {
+        StringBuilder string = new StringBuilder(name)
+                .append(" - (")
+                .append(tick)
+                .append("): ");
         Alliance no1 = null;
         for (Alliance alliance : this) {
             if (no1 == null || no1.getScore() < alliance.getScore()) {

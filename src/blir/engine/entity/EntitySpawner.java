@@ -39,14 +39,14 @@ public class EntitySpawner extends EntityType {
         Set<Location> existing = game.getEntityLocations(toSpawn);
         if (existing != null && existing.size() < cap) {
             Set<Location> entityLocations = game.getEntityLocations(this);
-            for (Location entity : entityLocations) {
-                if (game.getEntity(entity.x, entity.y).getTicksLived() % rate == 0) {
-                    Set<Location> emptyLocations = game.getEmptyLocations(entity.x, entity.y, 1);
+            for (Location loc : entityLocations) {
+                if (game.getEntity(loc).getTicksLived() % rate == 0) {
+                    Set<Location> emptyLocations = game.getEmptyLocations(loc.x, loc.y, 1);
                     int spawned = 0;
-                    for (Location loc : emptyLocations) {
+                    for (Location empty : emptyLocations) {
                         if (spawned + existing.size() < cap) {
                             spawned++;
-                            game.spawnEntity(loc.x, loc.y, toSpawn.spawn());
+                            game.spawnEntity(empty, toSpawn.spawn());
                         }
                     }
                 }

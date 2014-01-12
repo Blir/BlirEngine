@@ -17,10 +17,11 @@ public class HumanEntityType extends EntityType implements Team {
 
     int damageDealt;
     int deaths;
+    int births;
     int kills;
 
     public HumanEntityType(int id, int spawnID) {
-        super(id, "Human", Color.BLUE, new EntitySpawner(spawnID, "Human Spawner", Color.CYAN, 50, 4, id));
+        super(id, "Human", Color.BLUE, new EntitySpawner(spawnID, "Human Spawner", Color.CYAN, 250, 4, id));
     }
 
     @Override
@@ -50,7 +51,9 @@ public class HumanEntityType extends EntityType implements Team {
             if (filterByID(game.getNeighorSlice(empty.x, empty.y, 1), id).size() == 2
                 && game.getNeighorSlice(empty.x, empty.y, 2).isEmpty()) {
 
-                game.spawnEntity(empty, spawn());
+                if (game.spawnEntity(empty, spawn())) {
+                    births++;
+                }
             }
         }
     }
@@ -64,6 +67,6 @@ public class HumanEntityType extends EntityType implements Team {
 
     @Override
     public int getScore() {
-        return damageDealt + 15 * kills - 5 * deaths;
+        return 2 * damageDealt + 4 * births + 15 * kills - 5 * deaths;
     }
 }

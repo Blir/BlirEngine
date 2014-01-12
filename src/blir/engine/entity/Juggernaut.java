@@ -28,7 +28,9 @@ public class Juggernaut extends MortalEntity {
                 }
             }
         } else {
-            game.moveEntity(x, y, Location.towards(x, y, loc, 2));
+            if (!game.moveEntity(x, y, Location.towards(x, y, loc, 2))) {
+                game.moveEntity(x, y, Location.wander(x, y, 1));
+            }
         }
     }
 

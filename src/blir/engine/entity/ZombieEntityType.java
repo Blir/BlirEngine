@@ -20,7 +20,7 @@ public class ZombieEntityType extends EntityType implements Team {
     int kills;
 
     public ZombieEntityType(int id, int spawnID) {
-        super(id, "Zombie", Color.GREEN, new EntitySpawner(spawnID, "Zombie Spawner", Color.YELLOW, 50, 5, id));
+        super(id, "Zombie", Color.GREEN, new EntitySpawner(spawnID, "Zombie Spawner", Color.YELLOW, 50, 15, id));
     }
 
     @Override
@@ -45,6 +45,6 @@ public class ZombieEntityType extends EntityType implements Team {
 
     @Override
     public int getScore() {
-        return damageDealt + 15 * kills - 5 * deaths;
+        return 3 * damageDealt + 15 * kills - 10 * deaths;
     }
 }

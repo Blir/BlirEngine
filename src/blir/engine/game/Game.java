@@ -274,7 +274,7 @@ public abstract class Game implements Runnable {
     }
 
     public void updateScoreboard() {
-        gui.setTitle(scoreboard.toString(name));
+        gui.setTitle(scoreboard.toString(name, tick));
     }
 
     @Override

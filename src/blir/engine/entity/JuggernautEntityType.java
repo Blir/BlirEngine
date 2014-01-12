@@ -16,7 +16,7 @@ public class JuggernautEntityType extends EntityType implements Team {
     int kills;
     
     public JuggernautEntityType(int id, int spawnID) {
-        super(id, "Juggernaut", Color.RED, new EntitySpawner(spawnID, "Juggernaut Spawner", Color.PINK, 25, 2, id));
+        super(id, "Juggernaut", Color.RED, new EntitySpawner(spawnID, "Juggernaut Spawner", Color.PINK, 25, 8, id));
     }
 
     @Override
@@ -29,7 +29,7 @@ public class JuggernautEntityType extends EntityType implements Team {
 
     @Override
     public int getScore() {
-        return damageDealt + 5 * kills - 10 * deaths;
+        return damageDealt + 5 * kills - 15 * deaths;
     }
     
     @Override
