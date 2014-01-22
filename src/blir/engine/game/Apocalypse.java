@@ -13,7 +13,7 @@ public class Apocalypse extends GenericGame {
     public final Alliance zombies = new Alliance("Zombies");
 
     public Apocalypse() {
-        super("Apocalypse", EntityType.wall.id, 15);
+        super("Apocalypse", EntityType.wall.id, 50, 15);
         speed = 150;
     }
 

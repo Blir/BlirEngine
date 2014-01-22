@@ -8,10 +8,19 @@ import java.util.LinkedList;
  */
 public class Scoreboard extends LinkedList<Alliance> {
 
-    public String toString(String name, int tick) {
-        StringBuilder string = new StringBuilder(name)
+    private final Game game;
+
+    public Scoreboard(Game game) {
+        this.game = game;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder string = new StringBuilder(game.name)
                 .append(" - (")
-                .append(tick)
+                .append(game.getTick())
+                .append(":")
+                .append(String.format("%.3f",(double) game.getFrames() / game.getTick()))
                 .append("): ");
         Alliance no1 = null;
         for (Alliance alliance : this) {
@@ -20,6 +29,6 @@ public class Scoreboard extends LinkedList<Alliance> {
             }
             string.append(alliance.name).append(": ").append(alliance.getScore()).append(", ");
         }
-        return no1 == null ? name : string.append(no1.name).append(no1.name.endsWith("s") ? " are" : " is").append(" winning").toString();
+        return no1 == null ? string.toString() : string.append(no1.name).append(no1.name.endsWith("s") ? " are" : " is").append(" winning").toString();
     }
 }

@@ -16,32 +16,39 @@ import java.util.logging.Level;
  */
 public abstract class GenericGame extends Game {
 
-    public GenericGame(String name, int spawnInit, int pixelSize) {
+    final int PIXELS;
+    
+    public GenericGame(String name, int spawnInit, int pixels, int pixelSize) {
         super(name, spawnInit, pixelSize);
-        thisTick = new Entity[50][50];
+        this.PIXELS = pixels;
+        thisTick = new Entity[pixels][pixels];
+        
+        int size = PIXEL_SIZE * pixels + 75;
+        gui.setSize(size, size);
+        gui.setLocationRelativeTo(null);
     }
 
     @Override
     public void reset() {
-        thisTick = new Entity[50][50];
+        thisTick = new Entity[PIXELS][PIXELS];
     }
 
     @Override
     public int size() {
-        return 50;
+        return PIXELS;
     }
 
     @Override
     public Pixel[][] getDisplay() {
-        Pixel[][] pixels = new Pixel[50][50];
-        for (int row = 0; row < thisTick.length; row++) {
-            for (int col = 0; col < thisTick.length; col++) {
-                pixels[row][col] = thisTick[row][col] == null
+        Pixel[][] display = new Pixel[PIXELS][PIXELS];
+        for (int row = 0; row < PIXELS; row++) {
+            for (int col = 0; col < PIXELS; col++) {
+                display[row][col] = thisTick[row][col] == null
                                    ? new ColorPixel(row, col, PIXEL_SIZE, Color.BLACK)
                                    : getEntityType(thisTick[row][col].id).getPixel(row, col, PIXEL_SIZE);
             }
         }
-        return pixels;
+        return display;
     }
 
     @Override
@@ -61,7 +68,7 @@ public abstract class GenericGame extends Game {
                     }
                 }
 
-                nextTick = new Entity[50][50];
+                nextTick = new Entity[PIXELS][PIXELS];
 
                 for (int row = 0; row < thisTick.length; row++) {
                     System.arraycopy(thisTick[row], 0, nextTick[row], 0, thisTick[row].length);

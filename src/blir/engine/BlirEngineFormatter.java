@@ -8,6 +8,10 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 /**
+ * The formatter BlirEngine uses for its loggers. Arguments are formatted with
+ * String.format(), as opposed to the standard Logger format. For help with date
+ * formats, @see
+ * http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
  *
  * @author Blir
  */
@@ -16,6 +20,11 @@ public class BlirEngineFormatter extends Formatter {
     private final DateFormat dateFormat;
     private final String LINE_SEPARATOR = System.getProperty("line.separator");
 
+    /**
+     * Create a new BlirEngineFormatter.
+     *
+     * @param format the format with which to represent the date.
+     */
     public BlirEngineFormatter(String format) {
         dateFormat = new SimpleDateFormat(format);
     }

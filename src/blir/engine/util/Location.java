@@ -24,10 +24,7 @@ public class Location {
     }
 
     public static Location idleWander(Location loc, int dist, int rate) {
-        if (rng.nextInt(100) > rate - 1) {
-            return wander(loc, dist);
-        }
-        return null;
+        return idleWander(loc.x, loc.y, dist, rate);
     }
 
     public static Location towards(int startX, int startY, int endX, int endY,

@@ -24,14 +24,12 @@ public class GameGUI extends javax.swing.JFrame {
      * @param spawnInit
      */
     public GameGUI(Game game, int spawnInit) {
-        this.spawnID = spawnInit;
         this.panel = new GamePanel(game);
+        panel.spawnID = spawnInit;
         this.game = game;
         setContentPane(panel);
         initComponents();
         setTitle(game.name);
-        int size = game.PIXEL_SIZE * game.size() + 75;
-        setSize(size, size);
         setLocationRelativeTo(null);
     }
 
@@ -51,6 +49,10 @@ public class GameGUI extends javax.swing.JFrame {
     public void disableIO() {
         saveMenuItem.setEnabled(false);
         loadMenuItem.setEnabled(false);
+    }
+    
+    public int getPanelFrames() {
+        return panel.getFrames();
     }
 
     /**
@@ -73,19 +75,6 @@ public class GameGUI extends javax.swing.JFrame {
         spawnMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                onMouseClicked(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                onMousePressed(evt);
-            }
-        });
-        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                onMouseDragged(evt);
-            }
-        });
 
         jMenu2.setText("File");
 
@@ -164,59 +153,6 @@ public class GameGUI extends javax.swing.JFrame {
         new Thread(game).start();
     }//GEN-LAST:event_onToggle
 
-    private int placeX, placeY;
-    private int spawnID;
-    private boolean erase;
-
-    private void onMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onMouseClicked
-        if (spawnMenuItem.isEnabled()) {
-            int newX = (int) Math.round(evt.getX() / (double) game.PIXEL_SIZE - 1);
-            int newY = (int) Math.round(evt.getY() / (double) game.PIXEL_SIZE - 4);
-            if (game.isInBounds(newY, newX)) {
-                if (erase) {
-                    game.removeEntity(newY, newX);
-                } else {
-                    game.placeEntity(newY, newX, spawnID);
-                }
-            }
-            repaint();
-        }
-    }//GEN-LAST:event_onMouseClicked
-
-    private void onMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onMouseDragged
-        if (spawnMenuItem.isEnabled()) {
-            int newX = (int) Math.round(evt.getX() / (double) game.PIXEL_SIZE - 1);
-            int newY = (int) Math.round(evt.getY() / (double) game.PIXEL_SIZE - 4);
-
-            if (!game.isInBounds(newY, newX) || (newX == placeX && newY == placeY)
-                || (game.getEntity(newY, newX) == null == erase)) {
-
-                return;
-            }
-
-            placeX = newX;
-            placeY = newY;
-
-            if (erase) {
-                game.removeEntity(newY, newX);
-            } else {
-                game.placeEntity(newY, newX, spawnID);
-            }
-            repaint();
-        }
-    }//GEN-LAST:event_onMouseDragged
-
-    private void onMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onMousePressed
-        if (spawnMenuItem.isEnabled()) {
-            int newX = (int) Math.round(evt.getX() / (double) game.PIXEL_SIZE - 1);
-            int newY = (int) Math.round(evt.getY() / (double) game.PIXEL_SIZE - 4);
-            if (game.isInBounds(newY, newX)) {
-                erase = game.getEntity(newY, newX) != null;
-            }
-            repaint();
-        }
-    }//GEN-LAST:event_onMousePressed
-
     private void onClear(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onClear
         if (spawnMenuItem.isEnabled()) {
             toggler.setState(false);
@@ -228,6 +164,8 @@ public class GameGUI extends javax.swing.JFrame {
     private void onSpeedChange(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onSpeedChange
         try {
             game.setSpeed(Integer.parseInt(JOptionPane.showInputDialog(this, "Enter speed (ms):", game.getSpeed())));
+            panel.resetFrames();
+            game.resetTicks();
         } catch (NumberFormatException ex) {
             // ignore
         }
@@ -237,7 +175,7 @@ public class GameGUI extends javax.swing.JFrame {
         new SelectorGUI<EntityType>(game.getEntityTypes(), DISPOSE_ON_CLOSE) {
             @Override
             public void onSelectionMade(EntityType selection) {
-                spawnID = selection.id;
+                panel.spawnID = selection.id;
             }
         }.setVisible(true);
     }//GEN-LAST:event_onSpawnChange

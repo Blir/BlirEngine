@@ -13,7 +13,7 @@ public class ArchIorZard extends GenericGame {
     public final Alliance wizards = new Alliance("Wizards");
 
     public ArchIorZard() {
-        super("ArchIorZard", EntityType.wall.id, 15);
+        super("ArchIorZard", EntityType.wall.id, 50, 15);
         speed = 150;
     }
 
