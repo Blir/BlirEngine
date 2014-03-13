@@ -1,12 +1,16 @@
 package blir.engine.swing;
 
-import java.awt.Graphics;
-
 /**
  *
  * @author Blir
  */
-public interface Pixel {
+public class Pixel {
+
+    public final int x, y, id;
     
-    public void draw(Graphics g);
+    public Pixel(int x, int y, int id) {
+        this.x = x;
+        this.y = y;
+        this.id = id;
+    }
 }

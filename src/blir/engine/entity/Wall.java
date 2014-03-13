@@ -1,8 +1,7 @@
 package blir.engine.entity;
 
-import blir.engine.game.Game;
-
 import static blir.engine.entity.EntityType.wall;
+import blir.engine.game.Game;
 
 /**
  *

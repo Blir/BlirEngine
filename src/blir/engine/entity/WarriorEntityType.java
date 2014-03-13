@@ -1,6 +1,6 @@
 package blir.engine.entity;
 
-import blir.engine.game.Game;
+import blir.engine.game.SinglePlayerGame;
 import blir.engine.game.Team;
 
 import java.awt.Color;
@@ -23,11 +23,11 @@ public class WarriorEntityType extends EntityType implements Team {
     }
 
     @Override
-    public void init(Game game) {
+    public void init(SinglePlayerGame game) {
     }
 
     @Override
-    public void onSpawnTick(Game game) {
+    public void onSpawnTick(SinglePlayerGame game) {
     }
 
     @Override

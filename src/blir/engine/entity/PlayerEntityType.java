@@ -1,6 +1,6 @@
 package blir.engine.entity;
 
-import blir.engine.game.Game;
+import blir.engine.game.SinglePlayerGame;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -19,12 +19,12 @@ public class PlayerEntityType extends EntityType implements KeyListener {
     }
 
     @Override
-    public void init(Game game) {
+    public void init(SinglePlayerGame game) {
         game.registerKeyListener(this);
     }
 
     @Override
-    public void onSpawnTick(Game game) {
+    public void onSpawnTick(SinglePlayerGame game) {
     }
 
     @Override

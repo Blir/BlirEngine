@@ -1,9 +1,6 @@
 package blir.engine.entity;
 
-import blir.engine.game.Game;
-import blir.engine.swing.ColorPixel;
-import blir.engine.swing.ImagePixel;
-import blir.engine.swing.Pixel;
+import blir.engine.game.SinglePlayerGame;
 import blir.engine.util.Location;
 
 import java.awt.Color;
@@ -81,16 +78,12 @@ public abstract class EntityType {
         this(id, name, null, img, null);
     }
 
-    public abstract void init(Game game);
+    public abstract void init(SinglePlayerGame game);
 
-    public abstract void onSpawnTick(Game game);
+    public abstract void onSpawnTick(SinglePlayerGame game);
     
     public Entity spawn() {
         return new GenericEntity(id);
-    }
-    
-    public Pixel getPixel(int x, int y, int size) {
-        return color == null ? new ImagePixel(x, y, size, img) : new ColorPixel(x, y, size, color);
     }
 
     @Override

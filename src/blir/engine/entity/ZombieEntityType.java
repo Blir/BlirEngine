@@ -1,6 +1,6 @@
 package blir.engine.entity;
 
-import blir.engine.game.Game;
+import blir.engine.game.SinglePlayerGame;
 import blir.engine.game.Team;
 import blir.engine.util.Location;
 
@@ -29,11 +29,11 @@ public class ZombieEntityType extends EntityType implements Team {
     }
 
     @Override
-    public void init(Game game) {
+    public void init(SinglePlayerGame game) {
     }
 
     @Override
-    public void onSpawnTick(Game game) {
+    public void onSpawnTick(SinglePlayerGame game) {
         Set<Location> temp = new HashSet<>();
         for (Location loc : toSpawn) {
             if (!game.spawnEntity(loc, spawn())) {

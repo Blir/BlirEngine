@@ -1,6 +1,6 @@
 package blir.engine.entity;
 
-import blir.engine.game.Game;
+import blir.engine.game.SinglePlayerGame;
 import blir.engine.game.Team;
 import blir.engine.item.Item;
 import blir.engine.item.ItemStack;
@@ -25,11 +25,11 @@ public class HumanEntityType extends EntityType implements Team {
     }
 
     @Override
-    public void init(Game game) {
+    public void init(SinglePlayerGame game) {
     }
 
     @Override
-    public void onSpawnTick(Game game) {
+    public void onSpawnTick(SinglePlayerGame game) {
         Set<Location> entityLocations = game.getEntityLocations(this);
         Set<Location> emptyLocations = new HashSet<>();
 

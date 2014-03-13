@@ -19,7 +19,7 @@ public class BlirEngine {
 
     private static final Map<String, Game> games = new HashMap<>();
 
-    {
+    static {
         /* set up Logger */
         LOGGER.setUseParentHandlers(false);
         LOGGER.setLevel(Level.ALL);
@@ -48,7 +48,7 @@ public class BlirEngine {
     }
 
     /**
-     * Opens the Game Selector GUI.
+     * Opens the SinglePlayerGame Selector GUI.
      *
      * @return the Selector GUI opened
      */
@@ -60,14 +60,15 @@ public class BlirEngine {
                 selection.init();
             }
         };
+        
         selector.setVisible(true);
         return selector;
     }
 
     /**
-     * Registers a Game.
+     * Registers a SinglePlayerGame.
      *
-     * @param game the Game to register
+     * @param game the SinglePlayerGame to register
      */
     public static void registerGame(Game game) {
         games.put(game.name, game);

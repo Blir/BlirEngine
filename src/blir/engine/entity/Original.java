@@ -1,6 +1,7 @@
 package blir.engine.entity;
 
 import blir.engine.game.Game;
+import blir.engine.game.SinglePlayerGame;
 
 /**
  *
@@ -14,8 +15,9 @@ public class Original extends Entity {
 
     @Override
     public void onMoveTick(int x, int y, Game game) {
-        int population = EntityType.filterByID(game.getSquareNeighbors(x, y, 1), id).size();
-        game.getEntity(x, y).setAlive(population > 1 && population < 4);
+        SinglePlayerGame spg = (SinglePlayerGame) game;
+        int population = EntityType.filterByID(spg.getSquareNeighbors(x, y, 1), id).size();
+        spg.getEntity(x, y).setAlive(population > 1 && population < 4);
     }
 
     @Override

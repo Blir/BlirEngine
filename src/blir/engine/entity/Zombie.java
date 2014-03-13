@@ -1,11 +1,13 @@
 package blir.engine.entity;
 
-import blir.engine.game.Game;
+import blir.engine.game.SinglePlayerGame;
 import blir.engine.util.Location;
 
 import java.util.List;
 
 import static blir.engine.entity.EntityType.*;
+import blir.engine.game.Game;
+import blir.engine.swing.Animation;
 
 /**
  *
@@ -19,20 +21,24 @@ public class Zombie extends MortalEntity {
 
     @Override
     public void onMoveTick(int x, int y, Game game) {
-        Location loc = game.getFirstSquareNeighborLocation(x, y, 2, human.id);
+        SinglePlayerGame spg = (SinglePlayerGame) game;
+        Location loc = spg.getFirstSquareNeighborLocation(x, y, 2, human.id);
         loc = loc == null ? Location.idleWander(x, y, 1, 60) : Location.towards(x, y, loc, 1);
         if (loc != null) {
-            game.moveEntity(x, y, loc);
+            spg.moveEntity(x, y, loc);
         }
     }
 
     @Override
     public void onCombatTick(int x, int y, Game game) {
-        List<Entity> neighbors = game.getSquareNeighbors(x, y, 1);
+        SinglePlayerGame spg = (SinglePlayerGame) game;
+        List<Entity> neighbors = spg
+                .getSquareNeighbors(x, y, 1);
         for (Entity entity : neighbors) {
             if (entity.id == human.id) {
                 MortalEntity mortal = ((MortalEntity) entity);
                 if (mortal.damage(4)) {
+                    spg.addAnimation(Animation.hitAnimationFor(4, entity, spg));
                     zombie.damageDealt += 4;
                     zombie.kills++;
                     human.deaths++;
@@ -42,6 +48,7 @@ public class Zombie extends MortalEntity {
                 ((MortalEntity) entity).damage(2);
             } else if (entity.id == juggernaut.id) {
                 if (((MortalEntity) entity).damage(3)) {
+                    spg.addAnimation(Animation.hitAnimationFor(3, entity, spg));
                     zombie.damageDealt += 3;
                     zombie.kills++;
                     juggernaut.deaths++;

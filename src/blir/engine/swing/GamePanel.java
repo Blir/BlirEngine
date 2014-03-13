@@ -1,27 +1,29 @@
 package blir.engine.swing;
 
-import blir.engine.game.Game;
+import blir.engine.game.SinglePlayerGame;
 
 import java.awt.Graphics;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
+import java.util.List;
 import javax.swing.JPanel;
 
 /**
  *
  * @author Blir
  */
-public class GamePanel extends JPanel implements MouseListener, MouseMotionListener {
+public class GamePanel extends JPanel implements MouseListener,
+                                                 MouseMotionListener,
+                                                 ComponentListener {
 
-    private final Game game;
+    private final SinglePlayerGame game;
 
     private int frames = 0;
 
-    public GamePanel(Game game) {
+    public GamePanel(SinglePlayerGame game) {
         this.game = game;
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
+        this.addComponentListener(this);
     }
 
     @Override
@@ -30,8 +32,13 @@ public class GamePanel extends JPanel implements MouseListener, MouseMotionListe
         Pixel[][] pixels = game.getDisplay();
         for (Pixel[] row : pixels) {
             for (Pixel pixel : row) {
-                pixel.draw(g);
+                game.getPixelType(pixel.id).draw(pixel, game, g);
             }
+        }
+        List<Animation> animations = game.getAnimations();
+        
+        for (Animation a : animations) {
+            a.draw(g);
         }
         frames++;
     }
@@ -51,13 +58,13 @@ public class GamePanel extends JPanel implements MouseListener, MouseMotionListe
     @Override
     public void mouseClicked(MouseEvent e) {
         //if (spawnMenuItem.isEnabled()) {
-        int newX = (int) Math.round(e.getX() / (double) game.PIXEL_SIZE);
-        int newY = (int) Math.round(e.getY() / (double) game.PIXEL_SIZE);
-        if (game.isInBounds(newY, newX)) {
+        int newX = (int) Math.round(e.getX() / (double) game.getPixelSize());
+        int newY = (int) Math.round(e.getY() / (double) game.getPixelSize());
+        if (game.isInBounds(newX, newY)) {
             if (erase) {
-                game.removeEntity(newY, newX);
+                game.removeEntity(newX, newY);
             } else {
-                game.placeEntity(newY, newX, spawnID);
+                game.placeEntity(newX, newY, spawnID);
             }
         }
         repaint();
@@ -67,10 +74,10 @@ public class GamePanel extends JPanel implements MouseListener, MouseMotionListe
     @Override
     public void mousePressed(MouseEvent e) {
         //if (spawnMenuItem.isEnabled()) {
-        int newX = (int) Math.round(e.getX() / (double) game.PIXEL_SIZE);
-        int newY = (int) Math.round(e.getY() / (double) game.PIXEL_SIZE);
+        int newX = (int) Math.round(e.getX() / (double) game.getPixelSize());
+        int newY = (int) Math.round(e.getY() / (double) game.getPixelSize());
         if (game.isInBounds(newY, newX)) {
-            erase = game.getEntity(newY, newX) != null;
+            erase = game.getEntity(newX, newY) != null;
         }
         repaint();
         //}
@@ -91,11 +98,11 @@ public class GamePanel extends JPanel implements MouseListener, MouseMotionListe
     @Override
     public void mouseDragged(MouseEvent e) {
         //if (spawnMenuItem.isEnabled()) {
-        int newX = (int) Math.round(e.getX() / (double) game.PIXEL_SIZE);
-        int newY = (int) Math.round(e.getY() / (double) game.PIXEL_SIZE);
+        int newX = (int) Math.round(e.getX() / (double) game.getPixelSize());
+        int newY = (int) Math.round(e.getY() / (double) game.getPixelSize());
 
-        if (!game.isInBounds(newY, newX) || (newX == placeX && newY == placeY)
-                || (game.getEntity(newY, newX) == null == erase)) {
+        if (!game.isInBounds(newX, newY) || (newX == placeX && newY == placeY)
+            || (game.getEntity(newX, newY) == null == erase)) {
 
             return;
         }
@@ -104,9 +111,9 @@ public class GamePanel extends JPanel implements MouseListener, MouseMotionListe
         placeY = newY;
 
         if (erase) {
-            game.removeEntity(newY, newX);
+            game.removeEntity(newX, newY);
         } else {
-            game.placeEntity(newY, newX, spawnID);
+            game.placeEntity(newX, newY, spawnID);
         }
         repaint();
         //}
@@ -114,5 +121,26 @@ public class GamePanel extends JPanel implements MouseListener, MouseMotionListe
 
     @Override
     public void mouseMoved(MouseEvent e) {
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        int lim = Math.min(getWidth(), getHeight());
+        if (game.getMapSize() != 0) {
+            int size = lim / game.getMapSize();
+            game.setPixelSize(size);
+        }
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
     }
 }

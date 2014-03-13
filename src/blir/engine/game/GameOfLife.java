@@ -1,6 +1,8 @@
 package blir.engine.game;
 
 import blir.engine.entity.EntityType;
+import blir.engine.swing.PixelType;
+import java.awt.Color;
 
 /**
  *
@@ -16,6 +18,7 @@ public class GameOfLife extends GenericGame {
     @Override
     public void init() {
         registerEntityType(EntityType.original);
+        registerPixelType(PixelType.colorPixelTypeFor(Color.YELLOW, EntityType.original.id));
         gui.setVisible(true);
     }
 }

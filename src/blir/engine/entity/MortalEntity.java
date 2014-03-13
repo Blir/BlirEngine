@@ -6,7 +6,7 @@ package blir.engine.entity;
  */
 public abstract class MortalEntity extends Entity {
 
-    int maxHP;
+    final int maxHP;
     int dmg;
 
     public MortalEntity(int id, int maxHP) {
@@ -16,6 +16,14 @@ public abstract class MortalEntity extends Entity {
 
     public int getDamage() {
         return dmg;
+    }
+    
+    public int getHealth() {
+        return maxHP - dmg;
+    }
+    
+    public int getMaxHP() {
+        return maxHP;
     }
 
     public void setDamage(int dmg) {

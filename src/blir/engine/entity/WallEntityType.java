@@ -1,6 +1,6 @@
 package blir.engine.entity;
 
-import blir.engine.game.Game;
+import blir.engine.game.SinglePlayerGame;
 import java.awt.Color;
 
 /**
@@ -14,11 +14,11 @@ public class WallEntityType extends EntityType {
     }
 
     @Override
-    public void init(Game game) {
+    public void init(SinglePlayerGame game) {
     }
 
     @Override
-    public void onSpawnTick(Game game) {
+    public void onSpawnTick(SinglePlayerGame game) {
     }
 
     @Override

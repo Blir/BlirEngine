@@ -2,11 +2,10 @@ package blir.engine.game;
 
 import blir.engine.entity.Entity;
 import blir.engine.entity.EntityType;
-import blir.engine.swing.ColorPixel;
 import blir.engine.swing.Pixel;
+import blir.engine.swing.PixelType;
 import blir.engine.util.Location;
 
-import java.awt.Color;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -14,38 +13,34 @@ import java.util.logging.Level;
  *
  * @author Travis
  */
-public abstract class GenericGame extends Game {
+public abstract class GenericGame extends SinglePlayerGame {
 
-    final int PIXELS;
-    
     public GenericGame(String name, int spawnInit, int pixels, int pixelSize) {
-        super(name, spawnInit, pixelSize);
-        this.PIXELS = pixels;
+        super(name, spawnInit, pixelSize, pixels);
         thisTick = new Entity[pixels][pixels];
-        
-        int size = PIXEL_SIZE * pixels + 75;
-        gui.setSize(size, size);
+        gui.setSize(RECOMMENDED_WINDOW_SIZE, RECOMMENDED_WINDOW_SIZE);
         gui.setLocationRelativeTo(null);
     }
 
     @Override
     public void reset() {
-        thisTick = new Entity[PIXELS][PIXELS];
+        thisTick = new Entity[pixels][pixels];
+        animations.clear();
     }
 
     @Override
     public int size() {
-        return PIXELS;
+        return pixels;
     }
 
     @Override
     public Pixel[][] getDisplay() {
-        Pixel[][] display = new Pixel[PIXELS][PIXELS];
-        for (int row = 0; row < PIXELS; row++) {
-            for (int col = 0; col < PIXELS; col++) {
-                display[row][col] = thisTick[row][col] == null
-                                   ? new ColorPixel(row, col, PIXEL_SIZE, Color.BLACK)
-                                   : getEntityType(thisTick[row][col].id).getPixel(row, col, PIXEL_SIZE);
+        Pixel[][] display = new Pixel[thisTick.length][thisTick[0].length];
+        for (int row = 0; row < thisTick.length; row++) {
+            for (int col = 0; col < thisTick[row].length; col++) {
+                display[row][col]
+                        = new Pixel(row, col, thisTick[row][col] == null
+                                ? PixelType.emptyPixel.id : thisTick[row][col].id);
             }
         }
         return display;
@@ -68,10 +63,13 @@ public abstract class GenericGame extends Game {
                     }
                 }
 
-                nextTick = new Entity[PIXELS][PIXELS];
+                nextTick = new Entity[pixels][pixels];
 
-                for (int row = 0; row < thisTick.length; row++) {
-                    System.arraycopy(thisTick[row], 0, nextTick[row], 0, thisTick[row].length);
+                for (int row = 0; row < thisTick.length && row < nextTick.length; row++) {
+                    if (thisTick.length != nextTick.length) {
+                        log(Level.INFO, "[This:%d,Next:%d,This:%d,Next:%d]", thisTick.length, nextTick.length, thisTick[row].length, nextTick[row].length);
+                    }
+                    System.arraycopy(thisTick[row], 0, nextTick[row], 0, nextTick[row].length);
                 }
 
                 state = GameState.MOVE_TICK;
@@ -110,12 +108,12 @@ public abstract class GenericGame extends Game {
 
                 state = null;
 
-                for (int row = 0; row < thisTick.length; row++) {
-                    for (int col = 0; col < thisTick[row].length; col++) {
+                for (int row = 0; row < nextTick.length; row++) {
+                    for (int col = 0; col < nextTick[row].length; col++) {
                         if (thisTick[row][col] != null
-                            && (!thisTick[row][col].isAlive()
+                                && (!thisTick[row][col].isAlive()
                                 || (thisTick[row][col].getX() != row
-                                    || thisTick[row][col].getY() != col))) {
+                                || thisTick[row][col].getY() != col))) {
 
                             nextTick[row][col] = null;
                         }

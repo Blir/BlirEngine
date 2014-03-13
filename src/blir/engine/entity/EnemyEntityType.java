@@ -1,6 +1,6 @@
 package blir.engine.entity;
 
-import blir.engine.game.Game;
+import blir.engine.game.SinglePlayerGame;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -18,11 +18,11 @@ public class EnemyEntityType extends EntityType {
     }
 
     @Override
-    public void init(Game game) {
+    public void init(SinglePlayerGame game) {
     }
 
     @Override
-    public void onSpawnTick(Game game) {
+    public void onSpawnTick(SinglePlayerGame game) {
         if (game.getTick() % 50 == 0) {
             game.spawnEntity(player.getPos() + 25, 25, spawn());
         }

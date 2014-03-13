@@ -2,11 +2,9 @@ package blir.engine.game;
 
 import blir.engine.entity.Entity;
 import blir.engine.entity.EntityType;
-import blir.engine.swing.ColorPixel;
 import blir.engine.swing.Pixel;
 import blir.engine.util.Location;
 
-import java.awt.Color;
 import java.util.HashSet;
 import java.util.logging.Level;
 
@@ -16,10 +14,10 @@ import static blir.engine.entity.EntityType.player;
  *
  * @author Blir
  */
-public class ScrollingGame extends Game {
+public class ScrollingGame extends SinglePlayerGame {
 
-    public ScrollingGame(String name, int spawnInit, int pixelSize) {
-        super(name, spawnInit, pixelSize);
+    public ScrollingGame(String name, int spawnInit, int pixelSize, int pixels) {
+        super(name, spawnInit, pixelSize, pixels);
         thisTick = new Entity[50][250];
         speed = 50;
     }
@@ -57,9 +55,9 @@ public class ScrollingGame extends Game {
             for (int col = player.getPos() - 25; col < player.getPos() + 25; col++) {
                 //log(Level.FINEST, "col:%d playerPos:%d", col, player.getPos());
                 if (isInBounds(col)) {
-                    pixels[row][col - (player.getPos() - 25)] = thisTick[row][col] == null
-                                                                ? new ColorPixel(row, col, PIXEL_SIZE, Color.BLACK)
-                                                                : getEntityType(thisTick[row][col].id).getPixel(row, col, PIXEL_SIZE);
+                    pixels[row][col - (player.getPos() - 25)]
+                    = new Pixel(row, col, thisTick[row][col] == null
+                                          ? 0 : thisTick[row][col].id);
                 }
             }
         }

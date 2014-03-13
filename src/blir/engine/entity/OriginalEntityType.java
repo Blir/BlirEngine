@@ -1,6 +1,6 @@
 package blir.engine.entity;
 
-import blir.engine.game.Game;
+import blir.engine.game.SinglePlayerGame;
 import blir.engine.util.Location;
 
 import java.awt.Color;
@@ -17,7 +17,7 @@ public class OriginalEntityType extends EntityType {
     }
 
     @Override
-    public void onSpawnTick(Game game) {
+    public void onSpawnTick(SinglePlayerGame game) {
         Set<Location> entityLocations = game.getEntityLocations(this);
         for (Location loc : entityLocations) {
             Set<Location> emptyLocations = game.getEmptyLocations(loc.x, loc.y, 1);
@@ -30,7 +30,7 @@ public class OriginalEntityType extends EntityType {
     }
 
     @Override
-    public void init(Game game) {
+    public void init(SinglePlayerGame game) {
     }
     
     @Override

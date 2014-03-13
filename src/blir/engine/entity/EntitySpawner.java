@@ -1,6 +1,6 @@
 package blir.engine.entity;
 
-import blir.engine.game.Game;
+import blir.engine.game.SinglePlayerGame;
 import blir.engine.util.Location;
 
 import java.awt.Color;
@@ -34,7 +34,7 @@ public class EntitySpawner extends EntityType {
     }
 
     @Override
-    public void onSpawnTick(Game game) {
+    public void onSpawnTick(SinglePlayerGame game) {
         EntityType toSpawn = game.getEntityType(spawnID);
         Set<Location> existing = game.getEntityLocations(toSpawn);
         if (existing != null && existing.size() < cap) {
@@ -55,6 +55,6 @@ public class EntitySpawner extends EntityType {
     }
 
     @Override
-    public void init(Game game) {
+    public void init(SinglePlayerGame game) {
     }
 }

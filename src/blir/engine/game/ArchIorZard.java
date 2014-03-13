@@ -1,6 +1,10 @@
 package blir.engine.game;
 
 import blir.engine.entity.EntityType;
+import blir.engine.swing.PixelType;
+import java.awt.Color;
+
+import static blir.engine.entity.EntityType.*;
 
 /**
  *
@@ -19,13 +23,20 @@ public class ArchIorZard extends GenericGame {
 
     @Override
     public void init() {
-        registerEntityType(EntityType.wall);
-        registerEntityType(EntityType.archer);
-        registerEntityType(EntityType.warrior);
-        registerEntityType(EntityType.wizard);
-        archers.add(EntityType.archer);
-        warriors.add(EntityType.warrior);
-        wizards.add(EntityType.wizard);
+        registerEntityType(wall);
+        registerEntityType(archer);
+        registerEntityType(warrior);
+        registerEntityType(wizard);
+        registerPixelType(PixelType.colorPixelTypeFor(Color.YELLOW, wall.id));
+        registerPixelType(PixelType.colorPixelTypeFor(Color.GREEN, archer.id));
+        registerPixelType(PixelType.colorPixelTypeFor(Color.RED, warrior.id));
+        registerPixelType(PixelType.colorPixelTypeFor(Color.BLUE, wizard.id));
+        registerPixelType(PixelType.colorPixelTypeFor(Color.MAGENTA, archer.spawner.id));
+        registerPixelType(PixelType.colorPixelTypeFor(Color.ORANGE, warrior.spawner.id));
+        registerPixelType(PixelType.colorPixelTypeFor(Color.CYAN, wizard.spawner.id));
+        archers.add(archer);
+        warriors.add(warrior);
+        wizards.add(wizard);
         scoreboard.add(archers);
         scoreboard.add(warriors);
         scoreboard.add(wizards);
